@@ -17,37 +17,136 @@ async def get_mock_qc(hypothesis: str):
     time.sleep(10)
     return {
         "entity": {
-            "name": "Compound X-102",
-            "type": "small_molecule",
-            "target": "SARS-CoV-2 Mpro"
+            "name": "Trehalose cryoprotection",
+            "type": "scientific_hypothesis",
+            "target": "HeLa cells",
+            "description": "Trehalose improves post-thaw viability compared to sucrose",
+            "identifiers": {
+            "cas_number": "99-20-7",
+            "pubchem_cid": "7427",
+            "other_ids": []
+            }
         },
-        "novelty_assessment": "incremental",
+        "novelty_assessment": "unclear",
         "confidence": {
-            "score": 0.89,
+            "score": 0.25,
             "type": "model_confidence",
             "scale": "0-1"
         },
-        "summary": "Extensive research exists on SARS-CoV-2 Mpro inhibitors. Compound X-102 may offer incremental novelty due to its fluorinated scaffold...",
+        "summary": "The provided papers establish that trehalose and sucrose are recognized cryoprotectants and that cryopreservation chemistry is an active area of research, but they do not provide direct evidence comparing trehalose versus sucrose for post-thaw viability of HeLa cells. Because the available evidence is broad review-level background rather than cell-line-specific experimental data, the novelty and validity of the hypothesis cannot be confidently determined from these papers alone.",
+        "key_claims": [
+            {
+            "id": "claim_0",
+            "type": "background",
+            "text": "Trehalose and sucrose are both listed among cryoprotectants used in cryopreservation research.",
+            "supporting_references": [
+                "ref_0"
+            ]
+            },
+            {
+            "id": "claim_1",
+            "type": "background",
+            "text": "Cryopreservation outcomes depend on multiple damage pathways, and chemical cryoprotectants are used to address these mechanisms.",
+            "supporting_references": [
+                "ref_1"
+            ]
+            },
+            {
+            "id": "claim_2",
+            "type": "gap",
+            "text": "No provided paper reports a direct experimental comparison of trehalose versus sucrose for post-thaw viability of HeLa cells.",
+            "supporting_references": [
+                "ref_0",
+                "ref_1"
+            ]
+            },
+            {
+            "id": "claim_3",
+            "type": "conclusion",
+            "text": "The hypothesis is not directly supported or contradicted by the provided literature; available evidence is indirect and limited to general cryoprotectant context.",
+            "supporting_references": [
+                "ref_0",
+                "ref_1"
+            ]
+            }
+        ],
+        "knowledge_gaps": [
+            "Direct experimental data comparing trehalose and sucrose as cryoprotectants in HeLa cells are absent from the provided papers.",
+            "Post-thaw viability outcomes for HeLa cells under trehalose versus sucrose treatment are not reported.",
+            "Relevant experimental conditions such as concentrations, loading method, freezing rate, thawing protocol, and viability assay are not available in the provided evidence."
+        ],
         "references": [
             {
-                "id": 1,
-                "title": "Structure of Mpro from SARS-CoV-2 and discovery of its inhibitors",
-                "authors": ["Jin, Z.", "et al."],
-                "year": 2020,
-                "journal": "Nature",
-                "doi": "10.1038/s41586-020-2223-y"
+            "id": "ref_0",
+            "title": "Antifreeze Proteins: Novel Applications and Navigation towards Their Clinical Application in Cryobanking.",
+            "authors": [],
+            "year": 2022,
+            "journal": "International Journal of Molecular Sciences",
+            "doi": "10.3390/ijms23052639",
+            "url": "https://doi.org/10.3390/ijms23052639",
+            "quality": "medium",
+            "study_type": "review"
+            },
+            {
+            "id": "ref_1",
+            "title": "Chemical approaches to cryopreservation.",
+            "authors": [],
+            "year": 2022,
+            "journal": "Nature Reviews Chemistry",
+            "doi": "10.1038/s41570-022-00407-4",
+            "url": "https://doi.org/10.1038/s41570-022-00407-4",
+            "quality": "high",
+            "study_type": "review"
             }
         ],
         "evidence_links": [
             {
-                "reference_id": 1,
-                "claim": "Mpro inhibitors are well-studied"
+            "claim_id": "claim_0",
+            "reference_id": "ref_0",
+            "relationship": "supports"
+            },
+            {
+            "claim_id": "claim_1",
+            "reference_id": "ref_1",
+            "relationship": "partial"
+            },
+            {
+            "claim_id": "claim_2",
+            "reference_id": "ref_0",
+            "relationship": "partial"
+            },
+            {
+            "claim_id": "claim_2",
+            "reference_id": "ref_1",
+            "relationship": "partial"
+            },
+            {
+            "claim_id": "claim_3",
+            "reference_id": "ref_0",
+            "relationship": "partial"
+            },
+            {
+            "claim_id": "claim_3",
+            "reference_id": "ref_1",
+            "relationship": "partial"
             }
         ],
+        "metrics": {
+            "num_references": 2,
+            "num_supporting_claims": 0,
+            "num_contradicting_claims": 0,
+            "evidence_coverage_score": 0.15
+        },
+        "risk_flags": [
+            "limited_evidence",
+            "high_uncertainty"
+        ],
         "metadata": {
-            "generated_at": "2026-04-25T23:55:00Z",
-            "method": "LLM-assisted literature screening",
-            "version": "1.0"
+            "generated_at": "2026-04-25T22:50:08.923052",
+            "method": "EuropePMC multi-query retrieval + GPT-5.5 relevance selection + GPT-5.5 literature QC",
+            "source_query": "trehalose sucrose HeLa cryopreservation post-thaw viability | cryoprotectants mammalian cells viability | trehalose cryopreservation viability",
+            "pipeline_version": "v3",
+            "schema_version": "v3"
         }
     }
 
