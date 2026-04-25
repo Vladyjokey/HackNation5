@@ -1,0 +1,142 @@
+{
+  "experiment_metadata": {
+    "title": "string",
+    "objective": "string",
+    "biosafety_level": "BSL-1 | BSL-2 | BSL-3"
+  },
+  "scientific_rationale": {
+    "background": "string",
+    "hypothesis": "string",
+    "primary_endpoint": "string",
+    "secondary_endpoints": ["string"],
+    "success_criteria": "quantifiable_definition"
+  },
+  "experimental_design": {
+    "study_type": "in vitro | in vivo | ex vivo",
+    "model_system": "string",
+    "group_definitions": [
+      {
+        "group_name": "string",
+        "description": "string",
+        "sample_size": 0
+      }
+    ],
+    "randomization": "string",
+    "blinding": "none | single | double",
+    "replicates": {
+      "biological": 0,
+      "technical": 0
+    }
+  },
+  "controls": {
+    "positive_controls": ["string"],
+    "negative_controls": ["string"],
+    "internal_controls": ["string"],
+    "calibration_procedures": ["string"]
+  },
+  "protocol": [
+    {
+      "phase": "string",
+      "dependencies": ["string"],
+      "qc_checks": ["string"],
+      "steps": [
+        {
+          "step_id": 1,
+          "instruction": "string",
+          "duration_mins": 0,
+          "equipment": ["string"],
+          "consumables": ["string"],
+          "temp_celsius": "optional_number",
+          "expected_output": "string",
+          "failure_modes": ["string"],
+          "troubleshooting": ["string"]
+        }
+      ]
+    }
+  ],
+  "data_plan": {
+    "data_collection_methods": ["string"],
+    "data_format": "string",
+    "analysis_pipeline": ["string"],
+    "statistical_tests": ["string"],
+    "power_analysis": {
+      "effect_size": "string",
+      "power": 0.8,
+      "alpha": 0.05
+    }
+  },
+  "compliance": {
+    "biosafety": "string",
+    "ethical_approval_required": true,
+    "regulatory_bodies": ["string"],
+    "waste_disposal": ["string"]
+  },
+  "logistics": {
+    "reagents": [
+      {
+        "name": "string",
+        "vendor_hint": "string",
+        "catalog_no": "string",
+        "quantity": "string",
+        "unit_price": 0,
+        "is_in_stock_simulated": true
+      }
+    ],
+    "equipment_availability": [
+      {
+        "equipment": "string",
+        "is_available": true,
+        "booking_required": true
+      }
+    ],
+    "total_budget": 0,
+    "budget_breakdown": {
+      "reagents": 0,
+      "labor": 0,
+      "equipment": 0
+    },
+    "lead_time_days": 0,
+    "alternate_suppliers": ["string"]
+  },
+  "execution_plan": {
+    "timeline": [
+      {
+        "day": 1,
+        "tasks": ["string"]
+      }
+    ],
+    "milestones": ["string"],
+    "go_no_go_points": ["string"]
+  },
+  "operational_readiness": {
+    "staff_skills": ["string"],
+    "critical_warnings": ["string"],
+    "expected_bottlenecks": ["string"]
+  },
+  "risk_management": {
+    "critical_warnings": ["string"],
+    "expected_bottlenecks": ["string"],
+    "contingency_plans": ["string"]
+  },
+  "reporting": {
+    "deliverables": ["string"],
+    "report_format": "string",
+    "reproducibility_notes": ["string"]
+  },
+  "drug_candidate_specs": {
+    "molecular_weight": "number",
+    "solubility_profile": "string",
+    "storage_conditions": "e.g., -80C, protect from light",
+    "purity_requirement": ">98%"
+  },
+  "quality_assurance": {
+    "positive_control_expected_range": "string",
+    "negative_control_threshold": "string",
+    "plate_map_layout": "URL_or_Array (Essential for 96-well plates)"
+  },
+  "data_management": {
+    "eln_target_folder": "string",
+    "raw_data_storage": "S3 / Local Server",
+    "audit_trail_enabled": true
+  }
+}
