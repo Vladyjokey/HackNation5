@@ -1,6 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+import os
+from supabase import create_client, Client
+
+url: str = os.environ.get("SUPABASE_URL")
+key: str = os.environ.get("SUPABASE_KEY")
+
+supabase: Client = create_client(url, key)
+
 import time
 
 app = FastAPI()
@@ -11,6 +19,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
+@app.post("/feedback")
+async def save_feedback(data: dict):
+    try:
+        response = supabase.table("feedback_memory").insert({
+            "category": data.get("category"),
+            "feedback_type": data.get("feedback_type"),
+            "content": data.get("content"),
+            "context": data.get("context"),
+            "metadata": data.get("metadata")
+        }).execute()
+        
+        return {"status": "success", "message": "Memory logged."}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+    
+
 
 @app.get("/mock-qc")
 async def get_mock_qc(hypothesis: str):
@@ -148,7 +175,7 @@ async def get_mock_qc(hypothesis: str):
             "pipeline_version": "v3",
             "schema_version": "v3"
         }
-    }
+}
 
 @app.get("/mock-plan")
 async def get_mock_plan():
