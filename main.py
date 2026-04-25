@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+import time
 
 app = FastAPI()
 
@@ -13,6 +14,7 @@ app.add_middleware(
 
 @app.get("/mock-qc")
 async def get_mock_qc(hypothesis: str):
+    time.sleep(10)
     return {
         "entity": {
             "name": "Compound X-102",
@@ -51,6 +53,7 @@ async def get_mock_qc(hypothesis: str):
 
 @app.get("/mock-plan")
 async def get_mock_plan():
+    time.sleep(10)
     return {
         "experiment_metadata": {
             "title": "Inhibition of SARS-CoV-2 Main Protease (Mpro) using Compound X-102",
