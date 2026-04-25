@@ -22,6 +22,23 @@ app.add_middleware(
 
 
 
+@app.get("/feedback-history")
+async def get_all_feedback():
+    try:
+        response = supabase.table("feedback_memory") \
+            .select("*") \
+            .order("created_at", desc=True) \
+            .execute()
+        
+        return {
+            "status": "success",
+            "count": len(response.data),
+            "data": response.data
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    
+
 @app.post("/feedback")
 async def save_feedback(data: dict):
     try:
