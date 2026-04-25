@@ -18,6 +18,44 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/mock-qc")
+async def get_mock_qc(hypothesis: str):
+    return {
+        "entity": {
+            "name": "Compound X-102",
+            "type": "small_molecule",
+            "target": "SARS-CoV-2 Mpro"
+        },
+        "novelty_assessment": "incremental",
+        "confidence": {
+            "score": 0.89,
+            "type": "model_confidence",
+            "scale": "0-1"
+        },
+        "summary": "Extensive research exists on SARS-CoV-2 Mpro inhibitors. Compound X-102 may offer incremental novelty due to its fluorinated scaffold...",
+        "references": [
+            {
+                "id": 1,
+                "title": "Structure of Mpro from SARS-CoV-2 and discovery of its inhibitors",
+                "authors": ["Jin, Z.", "et al."],
+                "year": 2020,
+                "journal": "Nature",
+                "doi": "10.1038/s41586-020-2223-y"
+            }
+        ],
+        "evidence_links": [
+            {
+                "reference_id": 1,
+                "claim": "Mpro inhibitors are well-studied"
+            }
+        ],
+        "metadata": {
+            "generated_at": "2026-04-25T23:55:00Z",
+            "method": "LLM-assisted literature screening",
+            "version": "1.0"
+        }
+    }
+
 @app.get("/mock-plan")
 async def get_mock_plan():
     return {
