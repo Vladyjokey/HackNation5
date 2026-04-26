@@ -1,0 +1,6 @@
+requests
+pydantic
+langchain
+langchain-openai
+python-dotenv
+feedparser
