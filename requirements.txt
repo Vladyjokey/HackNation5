@@ -4,3 +4,6 @@ supabase
 langchain
 langchain-openai
 python-dotenv
+requests
+pydantic
+feedparser
