@@ -498,43 +498,6 @@ async def get_mock_plan():
         "booking_required": True
       }
     ],
-    "equipment_availability": [
-      {
-        "equipment": "Incubator",
-        "is_available": True,
-        "booking_required": False
-      },
-      {
-        "equipment": "Cryopreservation storage unit",
-        "is_available": True,
-        "booking_required": False
-      },
-      {
-        "equipment": "Water bath",
-        "is_available": True,
-        "booking_required": False
-      },
-      {
-        "equipment": "Pipettes",
-        "is_available": True,
-        "booking_required": False
-      },
-      {
-        "equipment": "Vortex mixer",
-        "is_available": True,
-        "booking_required": False
-      },
-      {
-        "equipment": "Trypan blue exclusion assay",
-        "is_available": True,
-        "booking_required": False
-      },
-      {
-        "equipment": "Photomicrography setup",
-        "is_available": False,
-        "booking_required": True
-      }
-    ],
     "total_budget": 800.0,
     "budget_breakdown": {
       "reagents": 65.0,
