@@ -372,7 +372,7 @@ async def get_mock_plan():
                 "consumables": [
                     "Viability assay kit"
                 ],
-                "temp_celsius": null,
+                "temp_celsius": None,
                 "expected_output": "Viability results for each group.",
                 "failure_modes": [
                     "Assay interference",
@@ -407,7 +407,7 @@ async def get_mock_plan():
         },
         "compliance": {
             "biosafety": "This study is conducted at BSL-1; basic laboratory safety procedures followed.",
-            "ethical_approval_required": false,
+            "ethical_approval_required": False,
             "regulatory_bodies": [
             "Institutional Review Board"
             ],
@@ -423,7 +423,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "50g",
                 "unit_price": 25.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "DMEM media",
@@ -431,7 +431,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "500ml",
                 "unit_price": 20.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "Fetal Bovine Serum (FBS)",
@@ -439,7 +439,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "500ml",
                 "unit_price": 30.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "Penicillin-Streptomycin",
@@ -447,7 +447,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "100ml",
                 "unit_price": 15.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "Cryovials",
@@ -455,7 +455,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "100 unit",
                 "unit_price": 50.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "Cryopreservation medium",
@@ -463,7 +463,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "100ml",
                 "unit_price": 40.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "D-PBS",
@@ -471,7 +471,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "500ml",
                 "unit_price": 15.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "Trypan blue staining solution",
@@ -479,7 +479,7 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "100ml",
                 "unit_price": 25.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             },
             {
                 "name": "Viability assay kit",
@@ -487,29 +487,29 @@ async def get_mock_plan():
                 "catalog_no": "TBD",
                 "quantity": "1 kit",
                 "unit_price": 200.0,
-                "is_in_stock_simulated": true
+                "is_in_stock_simulated": True
             }
             ],
             "equipment_availability": [
             {
                 "equipment": "Incubator",
-                "is_available": true,
-                "booking_required": false
+                "is_available": True,
+                "booking_required": False
             },
             {
                 "equipment": "Cryopreservation unit",
-                "is_available": true,
-                "booking_required": false
+                "is_available": True,
+                "booking_required": False
             },
             {
                 "equipment": "Water bath",
-                "is_available": true,
-                "booking_required": false
+                "is_available": True,
+                "booking_required": False
             },
             {
                 "equipment": "Automated cell counter",
-                "is_available": true,
-                "booking_required": false
+                "is_available": True,
+                "booking_required": False
             }
             ],
             "total_budget": 2420.0,
@@ -591,7 +591,7 @@ async def get_mock_plan():
             ]
         },
         "drug_candidate_specs": {
-            "molecular_weight": null,
+            "molecular_weight": None,
             "solubility_profile": "Soluble in water",
             "storage_conditions": "Store at room temperature",
             "purity_requirement": "98% or higher"
@@ -604,7 +604,7 @@ async def get_mock_plan():
         "data_management": {
             "eln_target_folder": "Trehalose_Viability_Study",
             "raw_data_storage": "Local secure drive with backups weekly",
-            "audit_trail_enabled": true
+            "audit_trail_enabled": True
         },
         "metadata": {
             "generated_at": "2026-04-26T01:14:21.858480",
