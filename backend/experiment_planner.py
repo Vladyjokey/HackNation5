@@ -13,10 +13,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv()
 
 from backend.utils import clean_qc_report, parse_json, clamp
+from backend.llm_agents import SCIENTIST_MODEL, OPERATIONS_MODEL
 
 
 client = OpenAI()
-MODEL_NAME = "gpt-4o-mini"
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
@@ -87,7 +87,7 @@ def retry_llm_json(prompt: str, max_retries: int = 2) -> dict:
 
     for _ in range(max_retries + 1):
         response = client.responses.create(
-            model=MODEL_NAME,
+            model=model_name, # type: ignore
             input=prompt
         )
 
@@ -632,7 +632,7 @@ Hypothesis:
 QC Results:
 {json.dumps(qc_result, indent=2)}
 """
-    data = retry_llm_json(prompt)
+    data = retry_llm_json(prompt, SCIENTIST_MODEL)
     return enforce_scientific_plan_schema(data)
 
 
@@ -740,7 +740,7 @@ Scientific Plan:
 {json.dumps(scientific_plan, indent=2)}
 """
 
-    data = retry_llm_json(prompt)
+    data = retry_llm_json(prompt, OPERATIONS_MODEL)
     return enforce_operations_plan_schema(data)
 
 

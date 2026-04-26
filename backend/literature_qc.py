@@ -12,7 +12,7 @@ from backend.pipeline import LiteratureQCPipeline
 load_dotenv()
 
 search_client = EuropePMCClient()
-qc_agent = OpenAIQCAgent(model_name="gpt-4o-mini")
+qc_agent = OpenAIQCAgent()
 
 def quality_control_check(hypothesis: str) -> dict:
     pipeline = LiteratureQCPipeline(
