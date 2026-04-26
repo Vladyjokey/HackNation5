@@ -81,7 +81,7 @@ graph TD;
 | **Frontend** | Vite + React (Vercel) |
 | **Backend** | FastAPI (Python, Railway) |
 | **Database** | Supabase (PostgreSQL + JSONB) |
-| **AI Models** | GPT-4o-mini / Claude 3.5 Sonnet |
+| **AI Models** | GPT-5.5 / GPT-5.4-mini |
 | **Security** | Shared-secret handshake + Vercel protection |
 
 ---
