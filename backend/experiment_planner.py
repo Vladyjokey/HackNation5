@@ -679,11 +679,12 @@ def generate_experiment_plan(hypothesis: str, qc_result: dict):
     return merge_full_experiment_plan(scientific_plan, operations_plan)
 
 
-if __name__ == "__main__":
+def execute_pipeline(hypo: str):
     from backend.literature_qc import quality_control_check
 
-    hypothesis = "Trehalose improves post-thaw viability of HeLa cells"
+    hypothesis = hypo
     qc_result = quality_control_check(hypothesis)
     experiment_plan = generate_experiment_plan(hypothesis, qc_result)
 
-    print(json.dumps(experiment_plan, indent=2))
+    return qc_result, experiment_plan
+    # print(json.dumps(experiment_plan, indent=2))

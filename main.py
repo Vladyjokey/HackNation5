@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from supabase import create_client, Client
+from backend.experiment_planner import execute_pipeline
 
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
@@ -68,11 +69,24 @@ async def save_feedback(data: dict):
         print(f"DATABASE ERROR: {e}")
         return {"status": "error", "detail": str(e)}
     
+@app.post("/generate-full-experiment")
+async def generate_full_experiment(hypothesis: str):
+    try:
+        qc_analysis, plan = execute_pipeline(hypothesis)
+        
+        return {
+            "status": "success",
+            "qc_report": qc_analysis,
+            "experiment_plan": plan
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    
 
 
 @app.get("/mock-qc")
 async def get_mock_qc(hypothesis: str):
-    time.sleep(1)
+    
     return {
         "entity": {
             "name": "Trehalose cryoprotection",
