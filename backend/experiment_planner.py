@@ -6,6 +6,7 @@ from datetime import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
 from supabase import create_client, Client
+from backend.utils import parse_json, clamp
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv()
@@ -19,26 +20,6 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client | None = None
 if SUPABASE_URL and SUPABASE_KEY:
     supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-
-def parse_json(text: str):
-    try:
-        return json.loads(text)
-    except Exception:
-        match = re.search(r"\{.*\}", text, re.DOTALL)
-        if not match:
-            raise ValueError(f"Failed to parse JSON:\n{text}")
-        return json.loads(match.group())
-
-
-def clamp_number(value, minimum, maximum, default):
-    try:
-        value = float(value)
-    except Exception:
-        value = default
-
-    return max(minimum, min(maximum, value))
-
 
 def get_scientist_memory(
     current_hypothesis: str,
@@ -341,16 +322,16 @@ def calculate_budget(operations_plan: dict):
 
     reagent_total = 0.0
     for reagent in reagents:
-        price = clamp_number(reagent.get("unit_price", 0), 0, 100000, 0)
+        price = clamp(reagent.get("unit_price", 0), 0, 100000, 0)
         reagent["unit_price"] = price
         reagent_total += price
 
     labor = operations_plan.get("labor_estimate", {})
-    labor_hours = clamp_number(labor.get("hours", 0), 0, 10000, 0)
-    hourly_rate = clamp_number(labor.get("hourly_rate", 0), 0, 10000, 0)
+    labor_hours = clamp(labor.get("hours", 0), 0, 10000, 0)
+    hourly_rate = clamp(labor.get("hourly_rate", 0), 0, 10000, 0)
     labor_total = labor_hours * hourly_rate
 
-    equipment_total = clamp_number(
+    equipment_total = clamp(
         operations_plan.get("equipment_cost_estimate", 0),
         0,
         100000,
