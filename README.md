@@ -112,11 +112,12 @@ graph TD;
    ```bash
    pip install -r requirements.txt
    ```
-2. Set environment variables:
+2. Set environment variables in a .env file:
    ```env
    SUPABASE_URL=...
    SUPABASE_KEY=...
    UI_BACKEND_SECRET=...
+   OPENAI_API_KEY=...
    ```
 3. Run the server:
    ```bash
