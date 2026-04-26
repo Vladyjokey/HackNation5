@@ -1,3 +1,10 @@
+### You can try out our Scientist Assitant [here](https://hack-nation5-five.vercel.app/)
+<br>
+<br>
+<br>
+
+
+
 # 🧬 Scientific OS: The AI Scientist
 **From hypothesis → literature grounding → runnable experiment plan**
 
