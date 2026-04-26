@@ -352,18 +352,20 @@ def get_scientist_memory(
 
 def generate_scientific_plan(hypothesis: str, qc_result: dict):
     past_corrections = get_scientist_memory(hypothesis)
-
     prompt = f"""
-You are a senior experimental scientist.
+You are a senior experimental scientist and bench protocol designer.
 
-Design a scientifically valid experiment.
+Your job is to design a scientifically valid, operationally realistic experiment plan.
+The protocol should resemble the level of specificity found in strong protocol repositories such as protocols.io, Bio-protocol, ATCC protocols, Addgene protocols, Thermo Fisher application notes, Sigma-Aldrich technical bulletins, Promega protocols, Qiagen protocols, and similar scientific SOP sources.
 
 Use the QC results and past human feedback to guide decisions:
-- Avoid unsupported assumptions
-- Address knowledge gaps explicitly
-- Keep the protocol safe, practical, and planning-level
-- Do not include unsafe biological optimization or pathogen work
-- If past human feedback conflicts with your default assumptions, follow the feedback strictly
+- Avoid unsupported assumptions.
+- Address knowledge gaps explicitly.
+- Keep the protocol safe, practical, and planning-level.
+- Do not include unsafe biological optimization or pathogen work.
+- If past human feedback conflicts with your default assumptions, follow the feedback strictly.
+- If the literature evidence is weak or indirect, design the experiment as a pilot study.
+- Do not claim the protocol has been directly published unless QC results support that.
 
 Previous Lead Scientist Feedback:
 {past_corrections}
@@ -454,16 +456,37 @@ Return STRICT JSON:
   }}
 }}
 
-Rules:
-- Be realistic and scientifically correct
-- Sample sizes must be reasonable, usually >=3
-- Protocol must be step-by-step but not unsafe
-- Align design with QC evidence and gaps
-- Apply relevant past scientist corrections
-- If evidence is weak, design as a pilot study
-- Return only JSON
-- Do not rename schema fields
-- Do not omit schema fields
+Protocol quality requirements:
+- Each protocol step must be detailed enough that a trained lab technician understands what to do without guessing.
+- Provide concrete experimental parameters where they are standard or reasonably inferred: concentrations, volumes, dilution ratios, cell counts, seeding densities, incubation times, temperatures, CO2 percentage, centrifugation settings, plate/flask format, storage duration, and assay timing.
+- Avoid vague instructions such as "treat cells", "prepare solution", "add media", "centrifuge", or "perform assay" unless followed by concrete operational detail.
+- Use specific reagent names instead of vague terms. Prefer examples like "DMEM supplemented with 10% FBS and 1% penicillin-streptomycin" over "culture media".
+- When wet-lab reagents are involved, include an early phase for reagent, media, formulation, or assay preparation.
+- Split the protocol into realistic phases such as setup, reagent/media preparation, sample preparation, treatment/intervention, freezing/storage, thawing/recovery, endpoint measurement, data lock, and analysis where relevant.
+- Include QC checks before critical transitions, such as before treatment, before freezing, before thawing, before endpoint measurement, before unblinding, and before data analysis.
+- Include realistic bench-level failure modes such as contamination, cell clumping, edge effects, assay saturation, low signal-to-background ratio, inconsistent thaw timing, incorrect dilution, reagent expiry, or equipment booking failure.
+- Include practical troubleshooting tied to the listed failure modes.
+- Do not invent impossible procedures.
+- Do not fabricate unrealistic precision. If exact values are uncertain, provide conservative standard lab approximations and flag uncertainty in the rationale, QC checks, or troubleshooting.
+- Do not include dangerous optimization, pathogen enhancement, or unsafe biological instructions.
+
+Scientific design requirements:
+- Sample sizes must be reasonable, usually >=3.
+- Include appropriate positive, negative, vehicle, benchmark, and internal controls where relevant.
+- Make success criteria measurable and tied directly to the hypothesis.
+- Align design with QC evidence and known gaps.
+- If the hypothesis is about viability, recovery, detection sensitivity, expression, permeability, or production rate, endpoints must directly measure that outcome.
+- Ensure the protocol, controls, endpoints, timeline assumptions, and materials are internally consistent.
+- Do not overgeneralize beyond the tested model system.
+
+Output rules:
+- Return only valid JSON.
+- Use JSON booleans and null values: true, false, null.
+- Do not rename schema fields.
+- Do not omit schema fields.
+- protocol MUST be a list of phase objects.
+- steps MUST be a list of step objects.
+- Never return protocol as a list of strings.
 
 Hypothesis:
 {hypothesis}
@@ -471,7 +494,6 @@ Hypothesis:
 QC Results:
 {json.dumps(qc_result, indent=2)}
 """
-
     data = retry_llm_json(prompt)
     return enforce_scientific_plan_schema(data)
 
