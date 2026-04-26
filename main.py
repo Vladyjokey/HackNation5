@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from supabase import create_client, Client
@@ -41,7 +41,11 @@ async def get_all_feedback():
 
 
 @app.post("/feedback")
-async def save_feedback(data: dict):
+async def save_feedback(data: dict, x_shared_secret: str = Header(None)):
+    
+    if x_shared_secret != os.environ.get("UI_BACKEND_SECRET"):
+        raise HTTPException(status_code=403, detail="Unauthorized Access")
+    
     try:
         if not data.get("hypothesis_context") or not data.get("content"):
             return {
@@ -70,7 +74,11 @@ async def save_feedback(data: dict):
         return {"status": "error", "detail": str(e)}
     
 @app.post("/generate-full-experiment")
-async def generate_full_experiment(hypothesis: str = Body(..., embed=True)):
+async def generate_full_experiment(hypothesis: str = Body(..., embed=True), x_shared_secret: str = Header(None)):
+    
+    if x_shared_secret != os.environ.get("UI_BACKEND_SECRET"):
+        raise HTTPException(status_code=403, detail="Unauthorized Access")
+    
     try:
         qc_analysis, plan = execute_pipeline(hypothesis)
         
