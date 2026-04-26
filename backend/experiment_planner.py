@@ -5,12 +5,20 @@ import sys
 from datetime import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
+from supabase import create_client, Client
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv()
 
 client = OpenAI()
-MODEL_NAME = "gpt-5.5"
+MODEL_NAME = "gpt-4o-mini"
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+
+supabase: Client | None = None
+if SUPABASE_URL and SUPABASE_KEY:
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 def parse_json(text: str):
@@ -32,7 +40,93 @@ def clamp_number(value, minimum, maximum, default):
     return max(minimum, min(maximum, value))
 
 
+def get_scientist_memory(
+    current_hypothesis: str,
+    current_entity: str = None,
+    current_ref: str = None
+) -> str:
+    """
+    Method 2: Faceted Retrieval.
+    Gathers a prioritized mix of:
+    - high-priority global rules
+    - hypothesis-specific feedback
+    - optional entity/reference-specific corrections
+    """
+
+    if supabase is None:
+        return "No relevant historical corrections found for this context."
+
+    try:
+        all_memories = []
+
+        # 1. Fetch HIGH PRIORITY global rules
+        global_rules = (
+            supabase.table("feedback_memory")
+            .select("*")
+            .eq("priority", "high")
+            .limit(3)
+            .execute()
+        )
+        all_memories.extend(global_rules.data or [])
+
+        # 2. Fetch feedback specifically for THIS hypothesis
+        hyp_feedback = (
+            supabase.table("feedback_memory")
+            .select("*")
+            .eq("hypothesis_context", current_hypothesis)
+            .order("created_at", desc=True)
+            .limit(5)
+            .execute()
+        )
+        all_memories.extend(hyp_feedback.data or [])
+
+        # 3. Fetch feedback for the specific entity/reference, if provided
+        if current_entity and current_ref:
+            entity_feedback = (
+                supabase.table("feedback_memory")
+                .select("*")
+                .eq("entity", current_entity)
+                .eq("reference_id", current_ref)
+                .limit(3)
+                .execute()
+            )
+            all_memories.extend(entity_feedback.data or [])
+
+        # Deduplicate by id
+        unique_memories = {
+            m["id"]: m for m in all_memories if m.get("id")
+        }.values()
+
+        # Limit total memory items to 10
+        unique_memories = list(unique_memories)[:10]
+
+        if not unique_memories:
+            return "No relevant historical corrections found for this context."
+
+        formatted_prompt = "### RELEVANT SCIENTIFIC MEMORY & CONSTRAINTS\n"
+        formatted_prompt += "The following historical feedback must be integrated into your reasoning:\n\n"
+
+        for m in sorted(
+            unique_memories,
+            key=lambda x: x.get("priority") == "high",
+            reverse=True
+        ):
+            prio_label = "🚨 [CRITICAL]" if m.get("priority") == "high" else "💡 [ADVISORY]"
+            category = m.get("category", "general").upper()
+            content = m.get("content", "")
+
+            formatted_prompt += f"{prio_label} ({category}): {content}\n"
+
+        return formatted_prompt
+
+    except Exception as e:
+        print(f"Error in Faceted Retrieval: {e}")
+        return "Memory system offline. Proceed with standard scientific defaults."
+
+
 def generate_scientific_plan(hypothesis: str, qc_result: dict):
+    past_corrections = get_scientist_memory(hypothesis)
+
     response = client.responses.create(
         model=MODEL_NAME,
         input=f"""
@@ -40,11 +134,15 @@ You are a senior experimental scientist.
 
 Design a scientifically valid experiment.
 
-Use the QC results to guide decisions:
+Use the QC results and past human feedback to guide decisions:
 - Avoid unsupported assumptions
 - Address knowledge gaps explicitly
 - Keep the protocol safe, practical, and planning-level
 - Do not include unsafe biological optimization or pathogen work
+- If past human feedback conflicts with your default assumptions, follow the feedback strictly
+
+Previous Lead Scientist Feedback:
+{past_corrections}
 
 Return STRICT JSON:
 {{
@@ -137,6 +235,7 @@ Rules:
 - Sample sizes must be reasonable, usually >=3
 - Protocol must be step-by-step but not unsafe
 - Align design with QC evidence and gaps
+- Apply relevant past scientist corrections
 - If evidence is weak, design as a pilot study
 - Return only JSON
 
@@ -310,7 +409,7 @@ def merge_full_experiment_plan(scientific_plan: dict, operations_plan: dict):
 
         "metadata": {
             "generated_at": datetime.utcnow().isoformat(),
-            "method": "Two-stage GPT-5.5 experiment planner: Scientific Designer + Lab Operations Manager; deterministic Python budget calculation",
+            "method": "Two-stage GPT-5.5 experiment planner: Scientific Designer + Lab Operations Manager; deterministic Python budget calculation; Supabase feedback memory injected into scientific planning",
             "pipeline_version": "v1",
             "schema_version": "experiment_plan_v1"
         }
