@@ -1,0 +1,781 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+@custom-variant hacker (&:is(.hacker *));
+@custom-variant scientific (&:is(.scientific *));
+
+/* ===== LIGHT THEME (Default) ===== */
+:root {
+  --background: oklch(0.985 0.002 240);
+  --foreground: oklch(0.145 0.02 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.02 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.02 250);
+  --primary: oklch(0.45 0.18 250);
+  --primary-foreground: oklch(0.985 0.002 240);
+  --secondary: oklch(0.96 0.01 240);
+  --secondary-foreground: oklch(0.205 0.02 250);
+  --muted: oklch(0.96 0.01 240);
+  --muted-foreground: oklch(0.5 0.02 250);
+  --accent: oklch(0.85 0.12 160);
+  --accent-foreground: oklch(0.2 0.05 160);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0.01 240);
+  --input: oklch(0.9 0.01 240);
+  --ring: oklch(0.45 0.18 250);
+  --chart-1: oklch(0.45 0.18 250);
+  --chart-2: oklch(0.6 0.15 160);
+  --chart-3: oklch(0.65 0.2 40);
+  --chart-4: oklch(0.55 0.15 290);
+  --chart-5: oklch(0.7 0.15 80);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0.002 240);
+  --sidebar-foreground: oklch(0.145 0.02 250);
+  --sidebar-primary: oklch(0.45 0.18 250);
+  --sidebar-primary-foreground: oklch(0.985 0.002 240);
+  --sidebar-accent: oklch(0.96 0.01 240);
+  --sidebar-accent-foreground: oklch(0.205 0.02 250);
+  --sidebar-border: oklch(0.9 0.01 240);
+  --sidebar-ring: oklch(0.45 0.18 250);
+}
+
+/* ===== DARK THEME ===== */
+/* Optimized for reduced eye strain with softer contrast ratios */
+/* Background hierarchy: background < card < secondary for depth without harshness */
+.dark {
+  /* Softer dark backgrounds - not pure black, using subtle blue undertone */
+  --background: oklch(0.16 0.015 250);
+  /* Softer white foreground - cream tint reduces glare */
+  --foreground: oklch(0.92 0.01 250);
+  /* Cards slightly elevated from background */
+  --card: oklch(0.19 0.015 250);
+  --card-foreground: oklch(0.92 0.01 250);
+  --popover: oklch(0.19 0.015 250);
+  --popover-foreground: oklch(0.92 0.01 250);
+  /* Primary with good visibility but not overly bright */
+  --primary: oklch(0.65 0.16 250);
+  --primary-foreground: oklch(0.16 0.015 250);
+  /* Secondary surfaces for layering */
+  --secondary: oklch(0.24 0.015 250);
+  --secondary-foreground: oklch(0.88 0.01 250);
+  /* Muted elements with comfortable contrast */
+  --muted: oklch(0.24 0.015 250);
+  --muted-foreground: oklch(0.65 0.02 250);
+  /* Accent with balanced saturation */
+  --accent: oklch(0.45 0.1 160);
+  --accent-foreground: oklch(0.92 0.01 250);
+  /* Destructive with sufficient warning visibility */
+  --destructive: oklch(0.45 0.15 25);
+  --destructive-foreground: oklch(0.92 0.01 250);
+  /* Softer borders that don't disappear but aren't harsh */
+  --border: oklch(0.28 0.015 250);
+  --input: oklch(0.22 0.015 250);
+  --ring: oklch(0.6 0.16 250);
+  /* Chart colors with balanced saturation for dark backgrounds */
+  --chart-1: oklch(0.65 0.16 250);
+  --chart-2: oklch(0.6 0.12 160);
+  --chart-3: oklch(0.65 0.15 40);
+  --chart-4: oklch(0.58 0.12 290);
+  --chart-5: oklch(0.68 0.12 80);
+  /* Sidebar with subtle distinction */
+  --sidebar: oklch(0.14 0.015 250);
+  --sidebar-foreground: oklch(0.92 0.01 250);
+  --sidebar-primary: oklch(0.65 0.16 250);
+  --sidebar-primary-foreground: oklch(0.92 0.01 250);
+  --sidebar-accent: oklch(0.24 0.015 250);
+  --sidebar-accent-foreground: oklch(0.92 0.01 250);
+  --sidebar-border: oklch(0.28 0.015 250);
+  --sidebar-ring: oklch(0.6 0.16 250);
+}
+
+/* ===== SCIENTIFIC THEME ===== */
+.scientific {
+  --background: oklch(0.13 0.025 230);
+  --foreground: oklch(0.92 0.02 200);
+  --card: oklch(0.16 0.03 230);
+  --card-foreground: oklch(0.92 0.02 200);
+  --popover: oklch(0.16 0.03 230);
+  --popover-foreground: oklch(0.92 0.02 200);
+  --primary: oklch(0.72 0.18 195);
+  --primary-foreground: oklch(0.1 0.02 230);
+  --secondary: oklch(0.22 0.035 230);
+  --secondary-foreground: oklch(0.85 0.15 195);
+  --muted: oklch(0.2 0.03 230);
+  --muted-foreground: oklch(0.6 0.05 200);
+  --accent: oklch(0.55 0.2 280);
+  --accent-foreground: oklch(0.95 0.02 280);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.95 0.05 25);
+  --border: oklch(0.28 0.06 200);
+  --input: oklch(0.18 0.04 230);
+  --ring: oklch(0.72 0.18 195);
+  --chart-1: oklch(0.72 0.18 195);
+  --chart-2: oklch(0.6 0.2 280);
+  --chart-3: oklch(0.65 0.18 160);
+  --chart-4: oklch(0.7 0.15 320);
+  --chart-5: oklch(0.75 0.2 90);
+  --sidebar: oklch(0.12 0.025 230);
+  --sidebar-foreground: oklch(0.92 0.02 200);
+  --sidebar-primary: oklch(0.72 0.18 195);
+  --sidebar-primary-foreground: oklch(0.1 0.02 230);
+  --sidebar-accent: oklch(0.22 0.035 230);
+  --sidebar-accent-foreground: oklch(0.92 0.02 200);
+  --sidebar-border: oklch(0.28 0.06 200);
+  --sidebar-ring: oklch(0.72 0.18 195);
+}
+
+/* ===== HACKER THEME ===== */
+.hacker {
+  --background: oklch(0.08 0.02 145);
+  --foreground: oklch(0.85 0.25 145);
+  --card: oklch(0.1 0.03 145);
+  --card-foreground: oklch(0.85 0.25 145);
+  --popover: oklch(0.1 0.03 145);
+  --popover-foreground: oklch(0.85 0.25 145);
+  --primary: oklch(0.7 0.28 145);
+  --primary-foreground: oklch(0.08 0.02 145);
+  --secondary: oklch(0.15 0.04 145);
+  --secondary-foreground: oklch(0.75 0.22 145);
+  --muted: oklch(0.15 0.04 145);
+  --muted-foreground: oklch(0.55 0.15 145);
+  --accent: oklch(0.5 0.2 180);
+  --accent-foreground: oklch(0.9 0.1 145);
+  --destructive: oklch(0.6 0.25 25);
+  --destructive-foreground: oklch(0.95 0.05 25);
+  --border: oklch(0.25 0.1 145);
+  --input: oklch(0.15 0.05 145);
+  --ring: oklch(0.7 0.28 145);
+  --chart-1: oklch(0.7 0.28 145);
+  --chart-2: oklch(0.6 0.2 180);
+  --chart-3: oklch(0.65 0.25 90);
+  --chart-4: oklch(0.55 0.2 200);
+  --chart-5: oklch(0.75 0.2 120);
+  --sidebar: oklch(0.08 0.02 145);
+  --sidebar-foreground: oklch(0.85 0.25 145);
+  --sidebar-primary: oklch(0.7 0.28 145);
+  --sidebar-primary-foreground: oklch(0.08 0.02 145);
+  --sidebar-accent: oklch(0.15 0.04 145);
+  --sidebar-accent-foreground: oklch(0.85 0.25 145);
+  --sidebar-border: oklch(0.25 0.1 145);
+  --sidebar-ring: oklch(0.7 0.28 145);
+}
+
+@theme inline {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --animate-spin-slow: spin 3s linear infinite;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply bg-background;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ===== SCIENTIFIC THEME SPECIAL EFFECTS ===== */
+
+/* Hexagonal grid background pattern */
+.scientific body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -20;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2306b6d4' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Subtle radial glow background - reduced to not overwhelm content */
+.scientific body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -5;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+}
+
+/* Subtle cyan accent for headings - ensuring visibility */
+.scientific h1,
+.scientific h2,
+.scientific h3 {
+  text-shadow: 0 0 30px rgba(6, 182, 212, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure all content stays above background */
+.scientific main,
+.scientific header,
+.scientific nav,
+.scientific section,
+.scientific article {
+  position: relative;
+  z-index: 1;
+}
+
+/* Increased vertical spacing for scientific theme */
+.scientific [class*="card"] > [class*="content"] {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.scientific [class*="card"] > [class*="header"] {
+  padding-top: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+/* Sample hypothesis hover effect - bold text on hover */
+.scientific .cursor-pointer:hover p,
+.scientific .cursor-pointer:hover [class*="description"] {
+  font-weight: 600;
+  transition: font-weight 0.2s ease;
+}
+
+/* Clean card effect with subtle border glow - only for actual Card components */
+.scientific [data-slot="card"],
+.scientific .rounded-lg.border.bg-card {
+  background: rgba(15, 23, 42, 0.85) !important;
+  box-shadow: 
+    0 0 0 1px rgba(6, 182, 212, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.2);
+  border-color: rgba(6, 182, 212, 0.2) !important;
+  backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
+}
+
+.scientific [data-slot="card"]:hover,
+.scientific .rounded-lg.border.bg-card:hover {
+  box-shadow: 
+    0 0 0 1px rgba(6, 182, 212, 0.25),
+    0 6px 24px rgba(0, 0, 0, 0.25),
+    0 0 30px rgba(6, 182, 212, 0.08);
+  border-color: rgba(6, 182, 212, 0.3) !important;
+}
+
+/* Neon glow buttons */
+.scientific button[class*="primary"] {
+  background: linear-gradient(135deg, 
+    rgba(6, 182, 212, 0.9) 0%, 
+    rgba(8, 145, 178, 1) 50%,
+    rgba(6, 182, 212, 0.9) 100%);
+  box-shadow: 
+    0 0 5px rgba(6, 182, 212, 0.5),
+    0 0 20px rgba(6, 182, 212, 0.3),
+    0 0 40px rgba(6, 182, 212, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.scientific button[class*="primary"]:hover {
+  box-shadow: 
+    0 0 10px rgba(6, 182, 212, 0.7),
+    0 0 30px rgba(6, 182, 212, 0.5),
+    0 0 60px rgba(6, 182, 212, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Pulsing ring effect for focused inputs */
+.scientific input:focus,
+.scientific textarea:focus {
+  box-shadow: 
+    0 0 0 2px rgba(6, 182, 212, 0.3),
+    0 0 20px rgba(6, 182, 212, 0.2);
+  border-color: rgba(6, 182, 212, 0.5);
+  animation: scientific-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scientific-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 2px rgba(6, 182, 212, 0.3),
+      0 0 20px rgba(6, 182, 212, 0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 4px rgba(6, 182, 212, 0.2),
+      0 0 30px rgba(6, 182, 212, 0.3);
+  }
+}
+
+/* Progress bar with lab tube effect */
+.scientific [role="progressbar"] {
+  background: linear-gradient(90deg, 
+    rgba(6, 182, 212, 0.1) 0%, 
+    rgba(6, 182, 212, 0.2) 100%);
+  border-radius: 9999px;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(6, 182, 212, 0.2);
+}
+
+.scientific [role="progressbar"] > div {
+  background: linear-gradient(90deg, 
+    rgba(6, 182, 212, 1) 0%, 
+    rgba(34, 211, 238, 1) 50%,
+    rgba(6, 182, 212, 1) 100%);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  animation: progress-glow 2s ease-in-out infinite;
+}
+
+@keyframes progress-glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.2); }
+}
+
+/* Smooth shimmer effect for loading bars */
+@keyframes shimmer-smooth {
+  0% { 
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% { 
+    transform: translateX(300%);
+    opacity: 0;
+  }
+}
+
+.scientific .shimmer-bar {
+  animation: shimmer-smooth 2.5s ease-in-out infinite;
+}
+
+/* Badge with scientific styling */
+.scientific [class*="badge"] {
+  background: linear-gradient(135deg, 
+    rgba(6, 182, 212, 0.2) 0%, 
+    rgba(139, 92, 246, 0.2) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  text-shadow: 0 0 5px currentColor;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+/* DNA helix animation for loading states */
+.scientific .animate-spin {
+  animation: scientific-spin 1s linear infinite;
+}
+
+@keyframes scientific-spin {
+  0% { 
+    transform: rotate(0deg);
+    filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(6, 182, 212, 0.8));
+  }
+  100% { 
+    transform: rotate(360deg);
+    filter: drop-shadow(0 0 5px rgba(6, 182, 212, 0.5));
+  }
+}
+
+/* Slow spin animation for theme toggle */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Floating particle effect on hover for interactive elements */
+.scientific a:hover,
+.scientific button:not([class*="primary"]):hover {
+  text-shadow: 0 0 8px currentColor;
+  transition: all 0.3s ease;
+}
+
+/* Scientific scrollbar */
+.scientific ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scientific ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+
+.scientific ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, 
+    rgba(6, 182, 212, 0.5) 0%, 
+    rgba(139, 92, 246, 0.5) 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+.scientific ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, 
+    rgba(6, 182, 212, 0.7) 0%, 
+    rgba(139, 92, 246, 0.7) 100%);
+}
+
+/* Clean underline for active tabs */
+.scientific [role="tablist"] [data-state="active"] {
+  position: relative;
+  border-bottom: 2px solid rgba(6, 182, 212, 0.8);
+  background: linear-gradient(to bottom, transparent 90%, rgba(6, 182, 212, 0.1) 100%);
+}
+
+/* Data visualization enhancement */
+.scientific [class*="chart"] {
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.2));
+}
+
+/* Evidence metrics - softer, less contrasting colors for scientific theme */
+.scientific .text-green-600,
+.scientific .text-green-500 {
+  color: rgba(74, 222, 128, 0.85);
+  text-shadow: none;
+}
+
+.scientific .text-amber-600,
+.scientific .text-amber-500 {
+  color: rgba(253, 186, 116, 0.85);
+  text-shadow: none;
+}
+
+.scientific .text-red-600,
+.scientific .text-red-500 {
+  color: rgba(252, 165, 165, 0.85);
+  text-shadow: none;
+}
+
+/* Milestones and decision points - adjusted backgrounds for dark theme */
+.scientific .bg-green-50,
+.scientific .bg-green-50\/50 {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.scientific .bg-amber-50,
+.scientific .bg-amber-50\/50 {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.scientific .text-green-700 {
+  color: rgba(52, 211, 153, 1);
+}
+
+.scientific .text-amber-700 {
+  color: rgba(251, 191, 36, 1);
+}
+
+.scientific .border-green-200 {
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+.scientific .border-amber-200 {
+  border-color: rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Fix equipment cards in dark mode - override light backgrounds */
+.scientific .border-green-200,
+.scientific .border-green-300 {
+  border-color: rgba(34, 197, 94, 0.4) !important;
+}
+
+.scientific .border-red-200,
+.scientific .border-red-300 {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+.scientific .from-green-50\/50,
+.scientific .bg-gradient-to-br.from-green-50\/50 {
+  background: rgba(34, 197, 94, 0.1) !important;
+}
+
+.scientific .from-red-50\/50,
+.scientific .bg-gradient-to-br.from-red-50\/50 {
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Fix pricing boxes in equipment section */
+.scientific .bg-green-100 {
+  background: rgba(34, 197, 94, 0.15) !important;
+}
+
+.scientific .bg-blue-50 {
+  background: rgba(59, 130, 246, 0.15) !important;
+}
+
+.scientific .border-green-200.bg-green-100,
+.scientific .bg-green-100.border {
+  border-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+.scientific .border-blue-200.bg-blue-50,
+.scientific .bg-blue-50.border {
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Ensure text visibility in equipment pricing */
+.scientific .text-green-600,
+.scientific .text-green-700 {
+  color: rgba(74, 222, 128, 0.95) !important;
+}
+
+.scientific .text-blue-600,
+.scientific .text-blue-700 {
+  color: rgba(147, 197, 253, 0.95) !important;
+}
+
+/* Review section - more visible input field borders */
+.scientific input,
+.scientific textarea,
+.scientific select,
+.scientific [role="combobox"] {
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+  background: rgba(15, 23, 42, 0.6) !important;
+}
+
+.scientific input:hover,
+.scientific textarea:hover,
+.scientific select:hover,
+.scientific [role="combobox"]:hover {
+  border-color: rgba(6, 182, 212, 0.5) !important;
+}
+
+.scientific input:focus,
+.scientific textarea:focus,
+.scientific select:focus {
+  border-color: rgba(6, 182, 212, 0.7) !important;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.15), 0 0 20px rgba(6, 182, 212, 0.1) !important;
+}
+
+/* Table rows with subtle scan line effect */
+.scientific tr:nth-child(even) {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(6, 182, 212, 0.03) 50%, 
+    transparent 100%);
+}
+
+.scientific tr:hover {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(6, 182, 212, 0.08) 50%, 
+    transparent 100%);
+}
+
+/* ===== HACKER THEME SPECIAL EFFECTS ===== */
+
+/* Scanline effect overlay */
+.hacker body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 0, 0.03) 0px,
+    rgba(0, 255, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  animation: scanlines 0.1s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(2px); }
+}
+
+/* Matrix rain background */
+.hacker body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: 
+    radial-gradient(ellipse at center, rgba(0, 50, 0, 0.3) 0%, transparent 70%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 20, 0, 0.5) 100%);
+}
+
+/* Glowing text effect for headings in hacker theme */
+.hacker h1,
+.hacker h2,
+.hacker h3 {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+/* Glowing border effect for cards */
+.hacker [class*="card"] {
+  box-shadow: 
+    0 0 5px rgba(0, 255, 0, 0.2),
+    0 0 10px rgba(0, 255, 0, 0.1),
+    inset 0 0 5px rgba(0, 255, 0, 0.05);
+  border-color: rgba(0, 255, 0, 0.3);
+}
+
+/* Glitch effect for primary buttons */
+.hacker button[class*="primary"] {
+  position: relative;
+  animation: glitch-skew 4s infinite linear alternate-reverse;
+}
+
+.hacker button[class*="primary"]::before,
+.hacker button[class*="primary"]::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+}
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(0deg); }
+  21% { transform: skew(2deg); }
+  22% { transform: skew(0deg); }
+  80% { transform: skew(0deg); }
+  81% { transform: skew(-1deg); }
+  82% { transform: skew(0deg); }
+  100% { transform: skew(0deg); }
+}
+
+/* Typing cursor effect for inputs */
+.hacker input:focus,
+.hacker textarea:focus {
+  animation: cursor-blink 1s step-end infinite;
+  caret-color: #00ff00;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { border-color: rgba(0, 255, 0, 0.5); }
+  50% { border-color: rgba(0, 255, 0, 1); }
+}
+
+/* Progress bar glow */
+.hacker [role="progressbar"] {
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Badge glow effect */
+.hacker [class*="badge"] {
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* Subtle flicker effect for the entire page */
+.hacker {
+  animation: flicker 5s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  97% { opacity: 1; }
+  98% { opacity: 0.95; }
+  99% { opacity: 1; }
+}
+
+/* Terminal-style monospace font for code elements */
+.hacker code,
+.hacker pre,
+.hacker [class*="mono"] {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  text-shadow: 0 0 3px currentColor;
+}
+
+/* Hover glow effect */
+.hacker a:hover,
+.hacker button:hover {
+  text-shadow: 0 0 8px currentColor;
+  transition: text-shadow 0.2s ease;
+}
+
+/* Scrollbar styling for hacker theme */
+.hacker ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.hacker ::-webkit-scrollbar-track {
+  background: rgba(0, 20, 0, 0.5);
+}
+
+.hacker ::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 0, 0.3);
+  border-radius: 4px;
+}
+
+.hacker ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 0, 0.5);
+}
