@@ -13,7 +13,7 @@ from backend.utils import clean_query
 # ==========================================
 
 FAST_MODEL = "gpt-4o-mini"
-STRONG_MODEL = "gpt-4o-mini"
+STRONG_MODEL = "gpt-4o"
 
 # Lightweight QC tasks
 QC_ENTITY_MODEL = FAST_MODEL
