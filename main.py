@@ -38,19 +38,34 @@ async def get_all_feedback():
         return {"status": "error", "message": str(e)}
     
 
+
 @app.post("/feedback")
 async def save_feedback(data: dict):
     try:
+        if not data.get("hypothesis_context") or not data.get("content"):
+            return {
+                "status": "error", 
+                "detail": "Missing required fields: hypothesis_context and content are mandatory."
+            }
+
         response = supabase.table("feedback_memory").insert({
-            "category": data.get("category"),
-            "feedback_type": data.get("feedback_type"),
+            "category": data.get("category", "general"),
+            "feedback_type": data.get("feedback_type", "observation"),
             "content": data.get("content"),
-            "context": data.get("context"),
-            "metadata": data.get("metadata")
+            "hypothesis_context": data.get("hypothesis_context"),
+            "entity": data.get("entity"),
+            "reference_id": data.get("reference_id"),
+            "status": data.get("status", "pending"),
+            "priority": data.get("priority", "medium"),
+            "confidence": data.get("confidence", "medium"),
+            "context": data.get("context", {}),
+            "metadata": data.get("metadata", {})
         }).execute()
         
-        return {"status": "success", "message": "Memory logged."}
+        return {"status": "success", "message": "High-fidelity memory logged."}
+
     except Exception as e:
+        print(f"DATABASE ERROR: {e}")
         return {"status": "error", "detail": str(e)}
     
 
