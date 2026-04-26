@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 import os
 from supabase import create_client, Client
 
@@ -39,34 +40,81 @@ async def get_all_feedback():
     
 
 
+VALID_CATEGORIES = {
+    "overview", "protocol", "materials", "timeline",
+    "data_plan", "compliance", "risk", "quality", "general"
+}
+
+VALID_FEEDBACK_TYPES = {
+    "correction", "suggestion", "issue", "optimization", "observation"
+}
+
+VALID_LEVELS = {"low", "medium", "high"}
+
 @app.post("/feedback")
 async def save_feedback(data: dict):
     try:
         if not data.get("hypothesis_context") or not data.get("content"):
-            return {
-                "status": "error", 
-                "detail": "Missing required fields: hypothesis_context and content are mandatory."
-            }
+            raise HTTPException(
+                status_code=400,
+                detail="Missing required fields: hypothesis_context and content are mandatory."
+            )
 
-        response = supabase.table("feedback_memory").insert({
-            "category": data.get("category", "general"),
-            "feedback_type": data.get("feedback_type", "observation"),
+        # --- Validate enums ---
+        category = data.get("category", "general")
+        if category not in VALID_CATEGORIES:
+            raise HTTPException(status_code=400, detail=f"Invalid category: {category}")
+
+        feedback_type = data.get("feedback_type", "observation")
+        if feedback_type not in VALID_FEEDBACK_TYPES:
+            raise HTTPException(status_code=400, detail=f"Invalid feedback_type: {feedback_type}")
+
+        priority = data.get("priority", "medium")
+        if priority not in VALID_LEVELS:
+            raise HTTPException(status_code=400, detail=f"Invalid priority: {priority}")
+
+        confidence = data.get("confidence", "medium")
+        if confidence not in VALID_LEVELS:
+            raise HTTPException(status_code=400, detail=f"Invalid confidence: {confidence}")
+
+        # --- Build payload ---
+        payload = {
+            "category": category,
+            "feedback_type": feedback_type,
             "content": data.get("content"),
             "hypothesis_context": data.get("hypothesis_context"),
-            "entity": data.get("entity"),
+
+            # IMPORTANT: fixed field name
+            "entity_type": data.get("entity_type"),
             "reference_id": data.get("reference_id"),
+
             "status": data.get("status", "pending"),
-            "priority": data.get("priority", "medium"),
-            "confidence": data.get("confidence", "medium"),
+            "priority": priority,
+            "confidence": confidence,
+
             "context": data.get("context", {}),
-            "metadata": data.get("metadata", {})
-        }).execute()
-        
-        return {"status": "success", "message": "High-fidelity memory logged."}
+
+            "metadata": {
+                **data.get("metadata", {}),
+                "source": data.get("metadata", {}).get("source", "ui_review"),
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        }
+
+        response = supabase.table("feedback_memory").insert(payload).execute()
+
+        return {
+            "status": "success",
+            "message": "High-fidelity memory logged.",
+            "id": response.data[0]["id"] if response.data else None
+        }
+
+    except HTTPException as e:
+        raise e
 
     except Exception as e:
         print(f"DATABASE ERROR: {e}")
-        return {"status": "error", "detail": str(e)}
+        raise HTTPException(status_code=500, detail=str(e))
     
 
 
