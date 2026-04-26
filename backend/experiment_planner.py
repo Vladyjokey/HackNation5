@@ -278,7 +278,6 @@ def validate_final_plan(plan: dict) -> dict:
     ExperimentPlanSchema(**plan)
     return plan
 
-
 def get_scientist_memory(
     current_hypothesis: str,
     current_entity: str = None,
@@ -287,61 +286,188 @@ def get_scientist_memory(
     if supabase is None:
         return "No relevant historical corrections found for this context."
 
+    def normalize(text: str) -> str:
+        return (text or "").lower().strip()
+
+    def is_junk_feedback(memory: dict) -> bool:
+        content = normalize(memory.get("content", ""))
+
+        if len(content) < 10:
+            return True
+
+        junk_patterns = [
+            "create table",
+            "insert into",
+            "select *",
+            "drop table",
+            "alter table",
+            "undefined",
+            "test test",
+        ]
+
+        if any(pattern in content for pattern in junk_patterns):
+            return True
+
+        return False
+
+    def relevance_score(memory: dict) -> int:
+        score = 0
+
+        hypothesis = normalize(current_hypothesis)
+        content = normalize(memory.get("content", ""))
+        hyp_context = normalize(memory.get("hypothesis_context", ""))
+        entity = normalize(memory.get("entity", ""))
+        ref = normalize(memory.get("reference_id", ""))
+        category = normalize(memory.get("category", ""))
+        priority = normalize(memory.get("priority", ""))
+        status = normalize(memory.get("status", ""))
+
+        if status in ["ignored", "failed"]:
+            return -999
+
+        if is_junk_feedback(memory):
+            return -999
+
+        # Calculate overlap
+        hypothesis_terms = set(hypothesis.replace(".", "").replace(",", "").split())
+        context_terms = set(hyp_context.replace(".", "").replace(",", "").split())
+        content_terms = set(content.replace(".", "").replace(",", "").split())
+
+        meaningful_terms = {
+            t for t in hypothesis_terms
+            if len(t) > 4 and t not in {"using", "within", "below", "above", "will", "with", "from", "that"}
+        }
+
+        overlap_context = meaningful_terms & context_terms
+        overlap_content = meaningful_terms & content_terms
+
+        # Base Relevance Check: Does this relate to the current request AT ALL?
+        is_exact_match = (hyp_context and hyp_context == hypothesis)
+        is_entity_match = (current_entity and entity == normalize(current_entity))
+        is_ref_match = (current_ref and ref == normalize(current_ref))
+        has_text_overlap = len(overlap_context) > 0 or len(overlap_content) > 0
+
+        # If it doesn't match the hypothesis, entity, ref, or keywords, it's irrelevant.
+        if not (is_exact_match or is_entity_match or is_ref_match or has_text_overlap):
+            return 0 
+
+        # --- SCORING ---
+        if is_exact_match:
+            score += 100
+
+        score += len(overlap_context) * 8
+        score += len(overlap_content) * 4
+
+        if is_entity_match:
+            score += 30
+
+        if is_ref_match:
+            score += 40
+
+        if category in ["protocol", "validation", "materials", "budget", "timeline", "general"]:
+            score += 5
+
+        if priority == "high":
+            score += 20
+        elif priority == "medium":
+            score += 10
+        elif priority == "low":
+            score += 3
+
+        return score
+
     try:
         all_memories = []
 
-        global_rules = (
+        # 1. Pull recent feedback broadly
+        recent_feedback = (
             supabase.table("feedback_memory")
             .select("*")
-            .eq("priority", "high")
-            .limit(3)
+            .order("created_at", desc=True)
+            .limit(50)
             .execute()
         )
-        all_memories.extend(global_rules.data or [])
+        all_memories.extend(recent_feedback.data or [])
 
+        # 2. Pull hypothesis-specific feedback exactly
         hyp_feedback = (
             supabase.table("feedback_memory")
             .select("*")
             .eq("hypothesis_context", current_hypothesis)
             .order("created_at", desc=True)
-            .limit(5)
+            .limit(20)
             .execute()
         )
         all_memories.extend(hyp_feedback.data or [])
 
-        if current_entity and current_ref:
-            entity_feedback = (
+        # 3. Pull approximate hypothesis matches using the first important chunk (60 chars)
+        search_fragment = current_hypothesis[:60]
+        fuzzy_feedback = (
+            supabase.table("feedback_memory")
+            .select("*")
+            .ilike("hypothesis_context", f"%{search_fragment}%")
+            .order("created_at", desc=True)
+            .limit(20)
+            .execute()
+        )
+        all_memories.extend(fuzzy_feedback.data or [])
+
+        # 4. Pull entity/reference-specific feedback if available
+        if current_entity:
+            entity_query = (
                 supabase.table("feedback_memory")
                 .select("*")
                 .eq("entity", current_entity)
-                .eq("reference_id", current_ref)
-                .limit(3)
-                .execute()
+                .order("created_at", desc=True)
+                .limit(20)
             )
+
+            if current_ref:
+                entity_query = entity_query.eq("reference_id", current_ref)
+
+            entity_feedback = entity_query.execute()
             all_memories.extend(entity_feedback.data or [])
 
+        # Deduplicate
         unique_memories = {
-            m["id"]: m for m in all_memories if m.get("id")
+            memory["id"]: memory
+            for memory in all_memories
+            if memory.get("id")
         }.values()
 
-        unique_memories = list(unique_memories)[:10]
+        # Score and filter
+        scored_memories = []
+        for memory in unique_memories:
+            score = relevance_score(memory)
+            if score > 0:
+                scored_memories.append((score, memory))
 
-        if not unique_memories:
+        # Sort by highest score
+        scored_memories.sort(key=lambda item: item[0], reverse=True)
+
+        # Take top 10
+        selected_memories = [memory for score, memory in scored_memories[:10]]
+
+        if not selected_memories:
             return "No relevant historical corrections found for this context."
 
         formatted_prompt = "### RELEVANT SCIENTIFIC MEMORY & CONSTRAINTS\n"
-        formatted_prompt += "The following historical feedback must be integrated into your reasoning:\n\n"
+        formatted_prompt += "The following historical feedback is relevant to this hypothesis and should be integrated when appropriate:\n\n"
 
-        for memory in sorted(
-            unique_memories,
-            key=lambda x: x.get("priority") == "high",
-            reverse=True
-        ):
-            prio_label = "🚨 [CRITICAL]" if memory.get("priority") == "high" else "💡 [ADVISORY]"
+        for memory in selected_memories:
+            priority = normalize(memory.get("priority", "medium"))
             category = memory.get("category", "general").upper()
-            content = memory.get("content", "")
+            feedback_type = memory.get("feedback_type", "feedback")
+            content = memory.get("content", "").strip()
 
-            formatted_prompt += f"{prio_label} ({category}): {content}\n"
+            if priority == "high":
+                prio_label = "🚨 [CRITICAL]"
+            elif priority == "medium":
+                prio_label = "⚠️ [IMPORTANT]"
+            else:
+                prio_label = "💡 [ADVISORY]"
+
+            formatted_prompt += f"{prio_label} ({category} / {feedback_type}): {content}\n"
 
         return formatted_prompt
 
@@ -363,12 +489,23 @@ Use the QC results and past human feedback to guide decisions:
 - Address knowledge gaps explicitly.
 - Keep the protocol safe, practical, and planning-level.
 - Do not include unsafe biological optimization or pathogen work.
-- If past human feedback conflicts with your default assumptions, follow the feedback strictly.
+- If past human feedback conflicts with your default assumptions, evaluate which is more scientifically valid and justified by evidence before deciding.
 - If the literature evidence is weak or indirect, design the experiment as a pilot study.
 - Do not claim the protocol has been directly published unless QC results support that.
 
 Previous Lead Scientist Feedback:
 {past_corrections}
+
+Feedback Integration Rules:
+- Treat the feedback above as candidate guidance, not guaranteed truth.
+- Critically evaluate each feedback item before applying it.
+- Only use feedback that is directly relevant to the current hypothesis, model system, or experimental design.
+- Ignore feedback that is unrelated, vague, malformed, placeholder text, test content, database/schema artifacts, nonsensical, or not scientifically actionable.
+- Ignore feedback that conflicts with biosafety, ethics, feasibility, QC evidence, or known scientific principles.
+- Apply high-priority feedback only if it is relevant and scientifically valid.
+- If feedback is valid and relevant, integrate it naturally into the experimental design, controls, protocol steps, validation strategy, quality assurance, or data plan.
+- Do not explicitly mention, quote, or explain the feedback in the final JSON.
+- If no feedback passes relevance and quality checks, proceed using only QC results and standard scientific reasoning.
 
 Return STRICT JSON:
 {{
@@ -458,6 +595,7 @@ Return STRICT JSON:
 
 Protocol quality requirements:
 - Each protocol step must be detailed enough that a trained lab technician understands what to do without guessing.
+- Whenever applicable, align protocol structure and terminology with standards from protocols.io, Bio-protocol, ATCC cell line protocols, Addgene protocols, supplier application notes, and MIQE Guidelines for qPCR. Do not claim direct source grounding unless the QC results include that source.
 - Provide concrete experimental parameters where they are standard or reasonably inferred: concentrations, volumes, dilution ratios, cell counts, seeding densities, incubation times, temperatures, CO2 percentage, centrifugation settings, plate/flask format, storage duration, and assay timing.
 - Avoid vague instructions such as "treat cells", "prepare solution", "add media", "centrifuge", or "perform assay" unless followed by concrete operational detail.
 - Use specific reagent names instead of vague terms. Prefer examples like "DMEM supplemented with 10% FBS and 1% penicillin-streptomycin" over "culture media".
@@ -582,6 +720,9 @@ Rules:
 - Every reagent must have its own unit_price.
 - Every consumable must have its own unit_price.
 - Every equipment_usage item must have its own unit_price.
+- Validate that the scientific plan is operationally feasible.
+- If key materials, steps, or dependencies are missing or unrealistic, infer conservatively and reflect uncertainty in logistics, risks, or bottlenecks.
+- Do not blindly assume the scientific plan is correct.
 - Do NOT return equipment_availability.
 - Do NOT return one big equipment_cost_estimate.
 - Do NOT invent a flat 1000 equipment cost.
@@ -593,6 +734,7 @@ Rules:
 - Return only JSON.
 - Do not rename schema fields.
 - Do not omit schema fields.
+- unit_price should represent the estimated cost for the listed quantity, not price per individual item unless quantity is one item.
 
 Scientific Plan:
 {json.dumps(scientific_plan, indent=2)}
