@@ -12,7 +12,7 @@ from pydantic import BaseModel
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv()
 
-from backend.utils import parse_json, clamp
+from backend.utils import clean_qc_report, parse_json, clamp
 
 
 client = OpenAI()
@@ -706,6 +706,7 @@ def execute_pipeline(hypo: str):
 
     hypothesis = hypo
     qc_result = quality_control_check(hypothesis)
+    qc_result = clean_qc_report(qc_result)
     experiment_plan = generate_experiment_plan(hypothesis, qc_result)
 
     return qc_result, experiment_plan
