@@ -87,14 +87,24 @@ def retry_llm_json(prompt: str, model_name: str, max_retries: int = 2) -> dict:
 
     for _ in range(max_retries + 1):
         response = client.responses.create(
-            model=model_name, # type: ignore
-            input=prompt
+            model=model_name,
+            input=prompt,
+            text={
+                "format": {
+                    "type": "json_object"
+                }
+            }
         )
 
         try:
             return parse_json(response.output_text)
         except Exception as e:
             last_error = e
+
+            print("\n--- FAILED MODEL OUTPUT ---")
+            print(response.output_text[:3000])
+            print("--- END FAILED MODEL OUTPUT ---\n")
+
             prompt += f"""
 
 Your previous response failed JSON parsing.
@@ -102,7 +112,7 @@ Your previous response failed JSON parsing.
 Error:
 {str(e)}
 
-Return ONLY valid JSON. Do not include markdown.
+Return ONLY valid JSON. Do not include markdown, explanations, or text outside the JSON object.
 """
 
     raise ValueError(f"Failed to get valid JSON after retries: {last_error}")
@@ -832,7 +842,13 @@ def merge_full_experiment_plan(scientific_plan: dict, operations_plan: dict):
         }
     }
 
-    return validate_final_plan(final_output)
+    try:
+        return validate_final_plan(final_output)
+    except Exception as e:
+        print("\n=== FINAL PLAN VALIDATION ERROR ===")
+        print(str(e))
+        print(json.dumps(final_output, indent=2))
+        raise e
 
 
 def generate_experiment_plan(hypothesis: str, qc_result: dict):

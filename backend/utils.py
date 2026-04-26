@@ -6,10 +6,13 @@ def parse_json(text: str):
     try:
         return json.loads(text)
     except Exception:
-        match = re.search(r"\{.*\}", text, re.DOTALL)
-        if not match:
+        start = text.find("{")
+        end = text.rfind("}")
+
+        if start == -1 or end == -1 or end <= start:
             raise ValueError(f"Could not parse JSON from model output:\n{text}")
-        return json.loads(match.group())
+
+        return json.loads(text[start:end + 1])
 
 def clean_query(query: str) -> str:
     return query.strip().replace('"', "").replace("'", "")

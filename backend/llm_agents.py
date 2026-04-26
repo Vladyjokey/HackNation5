@@ -12,8 +12,8 @@ from backend.utils import clean_query
 # 0. MODEL CHOICE
 # ==========================================
 
-FAST_MODEL = "gpt-5.4-mini"
-STRONG_MODEL = "gpt-5.5"
+FAST_MODEL = "gpt-4o-mini"
+STRONG_MODEL = "gpt-4o-mini"
 
 # Lightweight QC tasks
 QC_ENTITY_MODEL = FAST_MODEL
