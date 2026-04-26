@@ -72,7 +72,7 @@ async def save_feedback(data: dict):
 
 @app.get("/mock-qc")
 async def get_mock_qc(hypothesis: str):
-    time.sleep(10)
+    time.sleep(1)
     return {
         "entity": {
             "name": "Trehalose cryoprotection",
@@ -210,406 +210,430 @@ async def get_mock_qc(hypothesis: str):
 
 @app.get("/mock-plan")
 async def get_mock_plan():
-    time.sleep(10)
+    time.sleep(1)
     return {
-        "experiment_metadata": {
-            "title": "Effect of Trehalose on Post-Thaw Viability of HeLa Cells",
-            "objective": "To evaluate the impact of trehalose on the post-thaw viability of HeLa cells following cryopreservation.",
-            "biosafety_level": "BSL-1"
+  "experiment_metadata": {
+    "title": "Assessing the Effect of Trehalose on Post-Thaw Viability of HeLa Cells",
+    "objective": "To investigate whether trehalose enhances the post-thaw viability of cryopreserved HeLa cells.",
+    "biosafety_level": "BSL-1"
+  },
+  "scientific_rationale": {
+    "background": "Trehalose is known to have protective effects during cryopreservation across various cell types, but direct studies on HeLa cells are lacking.",
+    "hypothesis": "Trehalose improves post-thaw viability of HeLa cells.",
+    "primary_endpoint": "Viability percentage of HeLa cells post-thaw.",
+    "secondary_endpoints": [
+      "Morphological assessment of HeLa cells post-thaw",
+      "Glycolytic stress response of HeLa cells post-thaw"
+    ],
+    "success_criteria": "Statistically significant increase in post-thaw viability of HeLa cells treated with trehalose compared to the control group."
+  },
+  "experimental_design": {
+    "study_type": "in vitro",
+    "model_system": "HeLa cells",
+    "group_definitions": [
+      {
+        "group_name": "Trehalose Treatment",
+        "description": "HeLa cells treated with trehalose during cryopreservation.",
+        "sample_size": 6
+      },
+      {
+        "group_name": "Control",
+        "description": "HeLa cells cryopreserved without trehalose treatment.",
+        "sample_size": 6
+      }
+    ],
+    "randomization": "Random allocation of cells into treatment and control groups.",
+    "blinding": "Single",
+    "replicates": {
+      "biological": 3,
+      "technical": 2
+    }
+  },
+  "controls": {
+    "positive_controls": [
+      "Cryoprotectant with proven efficacy (e.g., DMSO)"
+    ],
+    "negative_controls": [
+      "HeLa cells without any cryoprotectant"
+    ],
+    "internal_controls": [
+      "Post-thaw viability of untreated HeLa cells"
+    ],
+    "calibration_procedures": [
+      "Calibration of viability assays using known standards"
+    ]
+  },
+  "protocol": [
+    {
+      "phase": "Preparation and Cryopreservation",
+      "dependencies": [
+        "Availability of HeLa cells",
+        "Purchasing of trehalose"
+      ],
+      "qc_checks": [
+        "Cell viability before freezing",
+        "Concentration verification of trehalose"
+      ],
+      "steps": [
+        {
+          "step_id": 1,
+          "instruction": "Culture HeLa cells to log phase and prepare for cryopreservation.",
+          "duration_mins": 120,
+          "equipment": [
+            "Incubator",
+            "Cell culture plates"
+          ],
+          "consumables": [
+            "DMEM medium",
+            "FBS"
+          ],
+          "temp_celsius": 37,
+          "expected_output": "Optimally cultured HeLa cells ready for cryopreservation.",
+          "failure_modes": [
+            "Contamination",
+            "Poor cell growth"
+          ],
+          "troubleshooting": [
+            "Check for aseptic technique",
+            "Monitor pH of medium"
+          ]
         },
-        "scientific_rationale": {
-            "background": "Trehalose has been shown to enhance cell viability post-thaw in various cell types, but direct evidence for its efficacy on HeLa cells is lacking.",
-            "hypothesis": "Trehalose improves post-thaw viability of HeLa cells.",
-            "primary_endpoint": "Post-thaw cell viability rate of HeLa cells.",
-            "secondary_endpoints": [
-            "Apoptotic cell rate",
-            "Cell morphology assessment"
-            ],
-            "success_criteria": "Post-thaw viability of HeLa cells treated with trehalose is significantly higher than control group."
+        {
+          "step_id": 2,
+          "instruction": "Prepare trehalose solution at desired concentration.",
+          "duration_mins": 30,
+          "equipment": [
+            "Pipettes",
+            "Vortex mixer"
+          ],
+          "consumables": [
+            "Trehalose powder",
+            "PBS"
+          ],
+          "temp_celsius": 25,
+          "expected_output": "Homogenous trehalose solution.",
+          "failure_modes": [
+            "Incomplete dissolution",
+            "Incorrect concentration"
+          ],
+          "troubleshooting": [
+            "Increase vortexing time or volume"
+          ]
         },
-        "experimental_design": {
-            "study_type": "in vitro",
-            "model_system": "HeLa cell culture",
-            "group_definitions": [
-            {
-                "group_name": "Control Group",
-                "description": "HeLa cells without trehalose treatment.",
-                "sample_size": 5
-            },
-            {
-                "group_name": "Trehalose Treatment Group",
-                "description": "HeLa cells treated with trehalose before cryopreservation.",
-                "sample_size": 5
-            }
-            ],
-            "randomization": "Random assignment of plates to each treatment group.",
-            "blinding": "Single",
-            "replicates": {
-            "biological": 3,
-            "technical": 2
-            }
+        {
+          "step_id": 3,
+          "instruction": "Cryopreserve HeLa cells with or without trehalose.",
+          "duration_mins": 30,
+          "equipment": [
+            "Cryopreservation storage unit"
+          ],
+          "consumables": [
+            "Cryovials"
+          ],
+          "temp_celsius": "Standard freezing protocol (-80\u00b0C initially or in liquid nitrogen)",
+          "expected_output": "Cryopreserved HeLa cells for later thawing.",
+          "failure_modes": [
+            "Improper cooling rate",
+            "Vial breakage"
+          ],
+          "troubleshooting": [
+            "Verify cooling rate using data loggers"
+          ]
         },
-        "controls": {
-            "positive_controls": [
-            "HeLa cells with a known cryoprotectant"
-            ],
-            "negative_controls": [
-            "HeLa cells without treatment"
-            ],
-            "internal_controls": [
-            "Non-frozen HeLa cells"
-            ],
-            "calibration_procedures": [
-            "Calibration of cell viability assay kits."
-            ]
-        },
-        "protocol": [
-            {
-            "phase": "Cell Preparation",
-            "dependencies": [
-                "Cell culture facilities, Cryopreservation materials"
-            ],
-            "qc_checks": [
-                "Cell count and viability before freezing"
-            ],
-            "steps": [
-                {
-                "step_id": 1,
-                "instruction": "Culture HeLa cells to 70-80% confluence.",
-                "duration_mins": 48,
-                "equipment": [
-                    "Incubator",
-                    "Cell culture flask"
-                ],
-                "consumables": [
-                    "DMEM media",
-                    "FBS",
-                    "Penicillin-Streptomycin"
-                ],
-                "temp_celsius": 37,
-                "expected_output": "HeLa cells ready for treatment.",
-                "failure_modes": [
-                    "Contamination",
-                    "Poor growth"
-                ],
-                "troubleshooting": [
-                    "Review aseptic techniques",
-                    "Check media quality"
-                ]
-                },
-                {
-                "step_id": 2,
-                "instruction": "Treat cells with trehalose and incubate.",
-                "duration_mins": 30,
-                "equipment": [
-                    "Incubator"
-                ],
-                "consumables": [
-                    "Trehalose solution"
-                ],
-                "temp_celsius": 37,
-                "expected_output": "HeLa cells treated with trehalose.",
-                "failure_modes": [
-                    "Inaccurate dosing",
-                    "Cell toxicity"
-                ],
-                "troubleshooting": [
-                    "Verify trehalose concentration",
-                    "Monitor for cellular stress"
-                ]
-                },
-                {
-                "step_id": 3,
-                "instruction": "Freeze the cells using a controlled-rate freezer.",
-                "duration_mins": 15,
-                "equipment": [
-                    "Cryopreservation unit"
-                ],
-                "consumables": [
-                    "Cryovials",
-                    "Cryopreservation medium"
-                ],
-                "temp_celsius": -80,
-                "expected_output": "Cells frozen in cryovials.",
-                "failure_modes": [
-                    "Improper cooling rate",
-                    "Freezer malfunction"
-                ],
-                "troubleshooting": [
-                    "Follow the freezer's SOP",
-                    "Check for power failures"
-                ]
-                },
-                {
-                "step_id": 4,
-                "instruction": "Thaw frozen cells rapidly in a water bath.",
-                "duration_mins": 5,
-                "equipment": [
-                    "Water bath"
-                ],
-                "consumables": [
-                    "D-PBS",
-                    "Trypan blue staining solution"
-                ],
-                "temp_celsius": 37,
-                "expected_output": "Thawed cells ready for viability assessment.",
-                "failure_modes": [
-                    "Inconsistent thaw rates",
-                    "Cell lysis"
-                ],
-                "troubleshooting": [
-                    "Monitor water bath temperature",
-                    "Use consistent thawing times"
-                ]
-                },
-                {
-                "step_id": 5,
-                "instruction": "Perform cell viability assay post-thaw.",
-                "duration_mins": 30,
-                "equipment": [
-                    "Automated cell counter"
-                ],
-                "consumables": [
-                    "Viability assay kit"
-                ],
-                "temp_celsius": None,
-                "expected_output": "Viability results for each group.",
-                "failure_modes": [
-                    "Assay interference",
-                    "Counting errors"
-                ],
-                "troubleshooting": [
-                    "Calibrate equipment",
-                    "Run controls in parallel"
-                ]
-                }
-            ]
-            }
-        ],
-        "data_plan": {
-            "data_collection_methods": [
-            "Flow cytometry",
-            "Cell viability assays"
-            ],
-            "data_format": "CSV",
-            "analysis_pipeline": [
-            "Statistical software for analysis",
-            "Basic data visualization tools"
-            ],
-            "statistical_tests": [
-            "t-test for independent samples"
-            ],
-            "power_analysis": {
-            "effect_size": "0.5",
-            "power": 0.8,
-            "alpha": 0.05
-            }
-        },
-        "compliance": {
-            "biosafety": "This study is conducted at BSL-1; basic laboratory safety procedures followed.",
-            "ethical_approval_required": False,
-            "regulatory_bodies": [
-            "Institutional Review Board"
-            ],
-            "waste_disposal": [
-            "Cell culture waste disposal according to institutional guidelines."
-            ]
-        },
-        "logistics": {
-            "reagents": [
-            {
-                "name": "Trehalose",
-                "vendor_hint": "Sigma-Aldrich",
-                "catalog_no": "TBD",
-                "quantity": "50g",
-                "unit_price": 25.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "DMEM media",
-                "vendor_hint": "Thermo Fisher",
-                "catalog_no": "TBD",
-                "quantity": "500ml",
-                "unit_price": 20.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "Fetal Bovine Serum (FBS)",
-                "vendor_hint": "Thermo Fisher",
-                "catalog_no": "TBD",
-                "quantity": "500ml",
-                "unit_price": 30.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "Penicillin-Streptomycin",
-                "vendor_hint": "Thermo Fisher",
-                "catalog_no": "TBD",
-                "quantity": "100ml",
-                "unit_price": 15.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "Cryovials",
-                "vendor_hint": "VWR",
-                "catalog_no": "TBD",
-                "quantity": "100 unit",
-                "unit_price": 50.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "Cryopreservation medium",
-                "vendor_hint": "Sigma-Aldrich",
-                "catalog_no": "TBD",
-                "quantity": "100ml",
-                "unit_price": 40.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "D-PBS",
-                "vendor_hint": "Thermo Fisher",
-                "catalog_no": "TBD",
-                "quantity": "500ml",
-                "unit_price": 15.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "Trypan blue staining solution",
-                "vendor_hint": "Gibco",
-                "catalog_no": "TBD",
-                "quantity": "100ml",
-                "unit_price": 25.0,
-                "is_in_stock_simulated": True
-            },
-            {
-                "name": "Viability assay kit",
-                "vendor_hint": "Promega",
-                "catalog_no": "TBD",
-                "quantity": "1 kit",
-                "unit_price": 200.0,
-                "is_in_stock_simulated": True
-            }
-            ],
-            "equipment_availability": [
-            {
-                "equipment": "Incubator",
-                "is_available": True,
-                "booking_required": False
-            },
-            {
-                "equipment": "Cryopreservation unit",
-                "is_available": True,
-                "booking_required": False
-            },
-            {
-                "equipment": "Water bath",
-                "is_available": True,
-                "booking_required": False
-            },
-            {
-                "equipment": "Automated cell counter",
-                "is_available": True,
-                "booking_required": False
-            }
-            ],
-            "total_budget": 2420.0,
-            "budget_breakdown": {
-            "reagents": 420.0,
-            "labor": 1000.0,
-            "equipment": 1000.0
-            },
-            "lead_time_days": 7,
-            "alternate_suppliers": [
-            "VWR",
-            "Fisher Scientific"
-            ]
-        },
-        "execution_plan": {
-            "timeline": [
-            {
-                "day": 1,
-                "tasks": [
-                "Culture HeLa cells to 70-80% confluence",
-                "Treat cells with trehalose",
-                "Freeze the cells",
-                "Thaw frozen cells",
-                "Perform cell viability assay"
-                ]
-            }
-            ],
-            "milestones": [
-            "Cells cultured successfully",
-            "Cells treated with trehalose",
-            "Cells successfully frozen",
-            "Cells thawed and ready for assay",
-            "Viability results obtained"
-            ],
-            "go_no_go_points": [
-            "If cells do not reach confluence, repeat cell culture step",
-            "If viability is below threshold in controls, repeat experiment"
-            ]
-        },
-        "operational_readiness": {
-            "staff_skills": [
-            "Cell culture techniques",
-            "Cryopreservation methods",
-            "Cell viability assays"
-            ],
-            "critical_warnings": [
-            "Ensure aseptic techniques are maintained",
-            "Monitor freezing rates closely"
-            ],
-            "expected_bottlenecks": [
-            "Availability of cell culture materials",
-            "Equipment calibration"
-            ]
-        },
-        "risk_management": {
-            "critical_warnings": [
-            "Potential contamination risks",
-            "Inaccurate measurements of reagents"
-            ],
-            "expected_bottlenecks": [
-            "Cell growth rates",
-            "Limited number of incubators"
-            ],
-            "contingency_plans": [
-            "Have backup stock of critical reagents",
-            "Identify alternative equipment for viability assays"
-            ]
-        },
-        "reporting": {
-            "deliverables": [
-            "Final report with results",
-            "Data analysis summary",
-            "Presentation of findings"
-            ],
-            "report_format": "PDF",
-            "reproducibility_notes": [
-            "Follow standard protocols",
-            "Document all deviations and observations"
-            ]
-        },
-        "drug_candidate_specs": {
-            "molecular_weight": None,
-            "solubility_profile": "Soluble in water",
-            "storage_conditions": "Store at room temperature",
-            "purity_requirement": "98% or higher"
-        },
-        "quality_assurance": {
-            "positive_control_expected_range": "70-90% viability",
-            "negative_control_threshold": "below 50% viability",
-            "plate_map_layout": "Two plates per treatment group, labeled and organized for easy tracking."
-        },
-        "data_management": {
-            "eln_target_folder": "Trehalose_Viability_Study",
-            "raw_data_storage": "Local secure drive with backups weekly",
-            "audit_trail_enabled": True
-        },
-        "metadata": {
-            "generated_at": "2026-04-26T01:14:21.858480",
-            "method": "Two-stage GPT-5.5 experiment planner: Scientific Designer + Lab Operations Manager; deterministic Python budget calculation; Supabase feedback memory injected into scientific planning",
-            "pipeline_version": "v1",
-            "schema_version": "experiment_plan_v1"
+        {
+          "step_id": 4,
+          "instruction": "Thaw cryopreserved HeLa cells and assess viability.",
+          "duration_mins": 15,
+          "equipment": [
+            "Water bath",
+            "Trypan blue exclusion assay"
+          ],
+          "consumables": [
+            "Dulbecco's PBS"
+          ],
+          "temp_celsius": 37,
+          "expected_output": "Viability metric for HeLa cells post-thaw.",
+          "failure_modes": [
+            "Heat shock",
+            "Cell clumping"
+          ],
+          "troubleshooting": [
+            "Optimize thawing time and handling procedures"
+          ]
         }
-        }
+      ]
+    }
+  ],
+  "data_plan": {
+    "data_collection_methods": [
+      "Cell viability assays",
+      "Photomicrography for morphological assessment",
+      "Metabolic assays for glycolytic stress response"
+    ],
+    "data_format": "Percentage viability (%), Images, Metabolic activity readings",
+    "analysis_pipeline": [
+      "Statistical analysis using t-tests or ANOVA for comparisons"
+    ],
+    "statistical_tests": [
+      "Two-tailed t-test for primary endpoint",
+      "ANOVA for secondary endpoints"
+    ],
+    "power_analysis": {
+      "effect_size": "0.5",
+      "power": 0.8,
+      "alpha": 0.05
+    }
+  },
+  "compliance": {
+    "biosafety": "All procedures performed under BSL-1 conditions, adhering to safe handling protocols.",
+    "ethical_approval_required": False,
+    "regulatory_bodies": [
+      "Institutional Biosafety Committee"
+    ],
+    "waste_disposal": [
+      "Standard biological waste disposal procedures"
+    ]
+  },
+  "logistics": {
+    "reagents": [
+      {
+        "name": "Trehalose",
+        "vendor_hint": "Sigma-Aldrich",
+        "catalog_no": "TBD",
+        "quantity": "100 g",
+        "unit_price": 50.0,
+        "is_in_stock_simulated": True
+      },
+      {
+        "name": "DMSO",
+        "vendor_hint": "Sigma-Aldrich",
+        "catalog_no": "D8657",
+        "quantity": "50 ml",
+        "unit_price": 15.0,
+        "is_in_stock_simulated": True
+      }
+    ],
+    "consumables": [
+      {
+        "name": "DMEM medium",
+        "vendor_hint": "Gibco",
+        "catalog_no": "11965-092",
+        "quantity": "500 ml",
+        "unit_price": 25.0,
+        "is_in_stock_simulated": True
+      },
+      {
+        "name": "FBS",
+        "vendor_hint": "Gibco",
+        "catalog_no": "10099-141",
+        "quantity": "500 ml",
+        "unit_price": 100.0,
+        "is_in_stock_simulated": True
+      },
+      {
+        "name": "Dulbecco's PBS",
+        "vendor_hint": "Gibco",
+        "catalog_no": "14190-144",
+        "quantity": "500 ml",
+        "unit_price": 10.0,
+        "is_in_stock_simulated": True
+      },
+      {
+        "name": "Cryovials",
+        "vendor_hint": "VWR",
+        "catalog_no": "89041-654",
+        "quantity": "50",
+        "unit_price": 35.0,
+        "is_in_stock_simulated": True
+      }
+    ],
+    "equipment_usage": [
+      {
+        "equipment": "Incubator",
+        "usage_description": "Culturing HeLa cells at 37\u00b0C",
+        "unit_price": 0,
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Cryopreservation storage unit",
+        "usage_description": "Storing cryopreserved HeLa cells",
+        "unit_price": 0,
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Water bath",
+        "usage_description": "Thawing cryopreserved cells",
+        "unit_price": 0,
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Pipettes",
+        "usage_description": "Preparing trehalose solution",
+        "unit_price": 0,
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Vortex mixer",
+        "usage_description": "Mixing trehalose solution",
+        "unit_price": 0,
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Trypan blue exclusion assay",
+        "usage_description": "Assessing cell viability",
+        "unit_price": 15.0,
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Photomicrography setup",
+        "usage_description": "For morphological assessment",
+        "unit_price": 50.0,
+        "is_available": False,
+        "booking_required": True
+      }
+    ],
+    "equipment_availability": [
+      {
+        "equipment": "Incubator",
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Cryopreservation storage unit",
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Water bath",
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Pipettes",
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Vortex mixer",
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Trypan blue exclusion assay",
+        "is_available": True,
+        "booking_required": False
+      },
+      {
+        "equipment": "Photomicrography setup",
+        "is_available": False,
+        "booking_required": True
+      }
+    ],
+    "total_budget": 800.0,
+    "budget_breakdown": {
+      "reagents": 65.0,
+      "consumables": 170.0,
+      "equipment": 65.0,
+      "labor": 500.0
+    },
+    "lead_time_days": 5,
+    "alternate_suppliers": [
+      "Thermo Fisher Scientific",
+      "VWR"
+    ]
+  },
+  "execution_plan": {
+    "timeline": [
+      {
+        "day": 1,
+        "tasks": [
+          "Culture HeLa cells to log phase",
+          "Prepare trehalose solution",
+          "Cryopreserve HeLa cells"
+        ]
+      },
+      {
+        "day": 2,
+        "tasks": [
+          "Thaw cryopreserved HeLa cells",
+          "Assess viability"
+        ]
+      }
+    ],
+    "milestones": [
+      "Completion of cryopreservation",
+      "Assessment of post-thaw viability"
+    ],
+    "go_no_go_points": [
+      "Verify cell viability before freezing",
+      "Confirm successful thawing process"
+    ]
+  },
+  "operational_readiness": {
+    "staff_skills": [
+      "Cell culture techniques",
+      "Cryopreservation methods",
+      "Viability assessment"
+    ],
+    "critical_warnings": [
+      "Contamination during cell culture",
+      "Inaccurate trehalose concentration"
+    ],
+    "expected_bottlenecks": [
+      "Availability of photomicrography setup",
+      "Time constraints for viability assessment"
+    ]
+  },
+  "risk_management": {
+    "critical_warnings": [
+      "Failure of cryopreservation",
+      "Cell contamination"
+    ],
+    "expected_bottlenecks": [
+      "Limited access to photomicrography setup"
+    ],
+    "contingency_plans": [
+      "Have backup availability for imaging services",
+      "Repeat cell culture if contamination occurs"
+    ]
+  },
+  "reporting": {
+    "deliverables": [
+      "Final report on post-thaw viability",
+      "Data analysis results"
+    ],
+    "report_format": "PDF",
+    "reproducibility_notes": [
+      "Detailed protocol available for replication",
+      "Use of standardized assays"
+    ]
+  },
+  "drug_candidate_specs": {
+    "molecular_weight": None,
+    "solubility_profile": "Soluble in water",
+    "storage_conditions": "Store at room temperature",
+    "purity_requirement": "\u2265 98%"
+  },
+  "quality_assurance": {
+    "positive_control_expected_range": "70-90% viability for positive controls",
+    "negative_control_threshold": "Less than 20% viability for negative controls",
+    "plate_map_layout": "Organized layout for treatment and control groups on cell plates."
+  },
+  "data_management": {
+    "eln_target_folder": "/experiments/trehalose_heLa_cells",
+    "raw_data_storage": "/data/raw/experiments/trehalose_heLa_cells",
+    "audit_trail_enabled": True
+  },
+  "metadata": {
+    "generated_at": "2026-04-26T01:55:44.415466",
+    "method": "Two-stage GPT-5.5 experiment planner: Scientific Designer + Lab Operations Manager; deterministic Python budget calculation; Supabase feedback memory injected into scientific planning",
+    "pipeline_version": "v1",
+    "schema_version": "experiment_plan_v1"
+  }
+}
