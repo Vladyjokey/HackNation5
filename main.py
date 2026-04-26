@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from supabase import create_client, Client
@@ -70,7 +70,7 @@ async def save_feedback(data: dict):
         return {"status": "error", "detail": str(e)}
     
 @app.post("/generate-full-experiment")
-async def generate_full_experiment(hypothesis: str):
+async def generate_full_experiment(hypothesis: str = Body(..., embed=True)):
     try:
         qc_analysis, plan = execute_pipeline(hypothesis)
         
