@@ -82,7 +82,7 @@ def ensure_dict(value):
     return {}
 
 
-def retry_llm_json(prompt: str, max_retries: int = 2) -> dict:
+def retry_llm_json(prompt: str, model_name: str, max_retries: int = 2) -> dict:
     last_error = None
 
     for _ in range(max_retries + 1):
