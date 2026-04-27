@@ -93,16 +93,19 @@ graph TD;
 ## 📂 Project Structure
 
 ```text
-├── main.py                 # FastAPI entrypoint
+├── main.py                      # FastAPI entrypoint
+├── prompt_schema.json           # General version of the agents response  
 ├── requirements.txt
 ├── /backend
-│   ├── pipeline.py         # Multi-agent orchestration
-│   ├── qc.py               # Literature QC
-│   ├── database.py         # Supabase + feedback memory
+│   ├── experiment_planner.py    # Main orchestrator of the experiment plan generation
+│   ├── literature_qc.py         # Responsible for running the Literature QC pipeline   
+│   ├── llm_agents.py            # Agents configurations and pydantic schemas of the agents
+│   ├── models.py                # Model of a literature reference
+│   ├── pipeline.py              # Literature QC pipeline
+│   ├── search_clients.py        # Literature searching API handler 
+│   ├── utils.py                 # General utilities used     
 │
-├── /frontend
-│   ├── src/                # React UI
-│   └── .env.production
+├── /frontend                    # React UI
 │
 └── README.md
 ```
