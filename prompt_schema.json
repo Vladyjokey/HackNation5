@@ -1,18 +1,99 @@
+// General schema for the literature quality check response:
+
+{
+  "entity": {
+    "name": "string",
+    "type": "string",
+    "target": "string",
+    "description": "string",
+    "identifiers": {
+      "primary_id": "string",
+      "secondary_id": "string",
+      "other_ids": []
+    }
+  },
+  "novelty_assessment": "string",
+  "confidence": {
+    "score": 0.0,
+    "type": "string",
+    "scale": "string"
+  },
+  "summary": "string",
+  "key_claims": [
+    {
+      "id": "string",
+      "type": "string",
+      "text": "string",
+      "supporting_references": [
+        "string"
+      ]
+    }
+  ],
+  "knowledge_gaps": [
+    "string"
+  ],
+  "references": [
+    {
+      "id": "string",
+      "title": "string",
+      "authors": [],
+      "year": 0,
+      "journal": "string",
+      "doi": "string",
+      "url": "string",
+      "quality": "string",
+      "study_type": "string"
+    }
+  ],
+  "evidence_links": [
+    {
+      "claim_id": "string",
+      "reference_id": "string",
+      "relationship": "string"
+    }
+  ],
+  "metrics": {
+    "num_references": 0,
+    "num_supporting_claims": 0,
+    "num_contradicting_claims": 0,
+    "evidence_coverage_score": 0.0
+  },
+  "risk_flags": [
+    "string"
+  ],
+  "metadata": {
+    "generated_at": "ISO-8601-timestamp",
+    "method": "string",
+    "source_query": "string",
+    "pipeline_version": "string",
+    "schema_version": "string"
+  }
+}
+
+
+
+
+
+
+// General schema for the experiment protocol desgin response:
+
 {
   "experiment_metadata": {
     "title": "string",
     "objective": "string",
-    "biosafety_level": "BSL-1 | BSL-2 | BSL-3"
+    "biosafety_level": "string"
   },
   "scientific_rationale": {
     "background": "string",
     "hypothesis": "string",
     "primary_endpoint": "string",
-    "secondary_endpoints": ["string"],
-    "success_criteria": "quantifiable_definition"
+    "secondary_endpoints": [
+      "string"
+    ],
+    "success_criteria": "string"
   },
   "experimental_design": {
-    "study_type": "in vitro | in vivo | ex vivo",
+    "study_type": "string",
     "model_system": "string",
     "group_definitions": [
       {
@@ -22,54 +103,70 @@
       }
     ],
     "randomization": "string",
-    "blinding": "none | single | double",
+    "blinding": "string",
     "replicates": {
       "biological": 0,
       "technical": 0
     }
   },
   "controls": {
-    "positive_controls": ["string"],
-    "negative_controls": ["string"],
-    "internal_controls": ["string"],
-    "calibration_procedures": ["string"]
+    "positive_controls": [
+      "string"
+    ],
+    "negative_controls": [
+      "string"
+    ],
+    "internal_controls": [
+      "string"
+    ],
+    "calibration_procedures": [
+      "string"
+    ]
   },
   "protocol": [
     {
       "phase": "string",
-      "dependencies": ["string"],
-      "qc_checks": ["string"],
+      "dependencies": [
+        "string"
+      ],
+      "qc_checks": [
+        "string"
+      ],
       "steps": [
         {
-          "step_id": 1,
+          "step_id": 0,
           "instruction": "string",
           "duration_mins": 0,
-          "equipment": ["string"],
-          "consumables": ["string"],
-          "temp_celsius": "optional_number",
+          "equipment": [],
+          "consumables": [],
+          "temp_celsius": null,
           "expected_output": "string",
-          "failure_modes": ["string"],
-          "troubleshooting": ["string"]
+          "failure_modes": [
+            "string"
+          ],
+          "troubleshooting": [
+            "string"
+          ]
         }
       ]
     }
   ],
   "data_plan": {
-    "data_collection_methods": ["string"],
+    "data_collection_methods": [],
     "data_format": "string",
-    "analysis_pipeline": ["string"],
-    "statistical_tests": ["string"],
+    "analysis_pipeline": [],
+    "statistical_tests": [],
     "power_analysis": {
       "effect_size": "string",
-      "power": 0.8,
-      "alpha": 0.05
+      "power": 0.0,
+      "alpha": 0.0
     }
   },
   "compliance": {
     "biosafety": "string",
-    "ethical_approval_required": true,
-    "regulatory_bodies": ["string"],
-    "waste_disposal": ["string"]
+    "ethical_approval_required": false,
+    "regulatory_bodies": [],
+    "waste_disposal": []
   },
   "logistics": {
     "reagents": [
@@ -78,65 +175,84 @@
         "vendor_hint": "string",
         "catalog_no": "string",
         "quantity": "string",
-        "unit_price": 0,
+        "unit_price": 0.0,
         "is_in_stock_simulated": true
       }
     ],
-    "equipment_availability": [
+    "consumables": [
       {
-        "equipment": "string",
-        "is_available": true,
-        "booking_required": true
+        "name": "string",
+        "vendor_hint": "string",
+        "catalog_no": "string",
+        "quantity": "string",
+        "unit_price": 0.0,
+        "is_in_stock_simulated": true
       }
     ],
-    "total_budget": 0,
+    "equipment_usage": [
+      {
+        "equipment": "string",
+        "usage_description": "string",
+        "unit_price": 0.0,
+        "is_available": true,
+        "booking_required": false
+      }
+    ],
+    "total_budget": 0.0,
     "budget_breakdown": {
-      "reagents": 0,
-      "labor": 0,
-      "equipment": 0
+      "reagents": 0.0,
+      "consumables": 0.0,
+      "equipment": 0.0,
+      "labor": 0.0
     },
     "lead_time_days": 0,
-    "alternate_suppliers": ["string"]
+    "alternate_suppliers": []
   },
   "execution_plan": {
     "timeline": [
       {
-        "day": 1,
-        "tasks": ["string"]
+        "day": 0,
+        "tasks": []
       }
     ],
-    "milestones": ["string"],
-    "go_no_go_points": ["string"]
+    "milestones": [],
+    "go_no_go_points": []
   },
   "operational_readiness": {
-    "staff_skills": ["string"],
-    "critical_warnings": ["string"],
-    "expected_bottlenecks": ["string"]
+    "staff_skills": [],
+    "critical_warnings": [],
+    "expected_bottlenecks": []
   },
   "risk_management": {
-    "critical_warnings": ["string"],
-    "expected_bottlenecks": ["string"],
-    "contingency_plans": ["string"]
+    "critical_warnings": [],
+    "expected_bottlenecks": [],
+    "contingency_plans": []
   },
   "reporting": {
-    "deliverables": ["string"],
+    "deliverables": [],
     "report_format": "string",
-    "reproducibility_notes": ["string"]
+    "reproducibility_notes": []
   },
-  "drug_candidate_specs": {
-    "molecular_weight": "number",
+  "intervention_specs": {
+    "molecular_weight": null,
     "solubility_profile": "string",
-    "storage_conditions": "e.g., -80C, protect from light",
-    "purity_requirement": ">98%"
+    "storage_conditions": "string",
+    "purity_requirement": "string"
   },
   "quality_assurance": {
     "positive_control_expected_range": "string",
     "negative_control_threshold": "string",
-    "plate_map_layout": "URL_or_Array (Essential for 96-well plates)"
+    "plate_map_layout": "string"
   },
   "data_management": {
     "eln_target_folder": "string",
-    "raw_data_storage": "S3 / Local Server",
+    "raw_data_storage": "string",
     "audit_trail_enabled": true
+  },
+  "metadata": {
+    "generated_at": "timestamp",
+    "method": "string",
+    "pipeline_version": "string",
+    "schema_version": "string"
   }
 }
