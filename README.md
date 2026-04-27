@@ -103,9 +103,10 @@ graph TD;
 │   ├── models.py                # Model of a literature reference
 │   ├── pipeline.py              # Literature QC pipeline
 │   ├── search_clients.py        # Literature searching API handler 
-│   ├── utils.py                 # General utilities used     
-│
+│   ├── utils.py                 # General utilities used     │
+│   ├── .env.example             # Example .env file     
 ├── /frontend                    # React UI
+│   ├── .env.example             # Example .env file     
 │
 └── README.md
 ```
@@ -178,7 +179,6 @@ And critically: **It learns from scientists.** Each correction improves the syst
 ---
 
 ## 📬 Future Work
-- [ ] Automated literature retrieval (live APIs)
-- [ ] Experiment ranking / prioritization
+- [ ] Better information retrieval from the scientists feedback
 - [ ] Deeper cost modeling
 - [ ] Lab-specific customization
