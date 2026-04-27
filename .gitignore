@@ -1,5 +1,6 @@
 # Environment variables
-.env
+.env*
+!.env.example
 
 # Python virtual environment
 .venv/
@@ -11,3 +12,16 @@ __pycache__/
 # OS files
 .DS_Store
 Thumbs.db
+
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
+next.user-config.*
+
+# Common ignores
+node_modules
+.next/
