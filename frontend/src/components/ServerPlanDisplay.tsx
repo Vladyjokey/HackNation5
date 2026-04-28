@@ -208,10 +208,10 @@ export function ServerPlanDisplay({ initialPlan, hypothesis }: ServerPlanDisplay
           </AlertDescription>
         </Alert>
         <div className="mt-4 flex justify-center">
-          <Button onClick={loadPlan} variant="outline">
+          {/* <Button onClick={loadPlan} variant="outline">
             <RefreshCw className="mr-2 h-4 w-4" />
             Retry
-          </Button>
+          </Button> */}
         </div>
       </motion.div>
     )
@@ -241,10 +241,10 @@ export function ServerPlanDisplay({ initialPlan, hypothesis }: ServerPlanDisplay
           </h2>
           <p className="text-muted-foreground">{plan.experiment_metadata.objective}</p>
         </div>
-        <Button onClick={loadPlan} variant="outline" size="sm">
+        {/* <Button onClick={loadPlan} variant="outline" size="sm">
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh
-        </Button>
+        </Button> */}
       </div>
 
       {/* Summary Cards */}

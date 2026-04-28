@@ -439,7 +439,7 @@ export async function fetchFullExperiment(hypothesis: string): Promise<Normalize
 
 export async function fetchExperimentPlan(): Promise<ServerExperimentPlan> {
   try {
-    const response = await fetch(`${API_BASE_URL}/mock-plan`, {
+    const response = await fetch(`${API_BASE_URL}/generate-full-experiment`, {
       method: 'GET',
       headers: createHeaders(),
     })
